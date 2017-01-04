@@ -107,13 +107,14 @@ void x264_sps_init( x264_sps_t *sps, int i_id, x264_param_t *param )
     sps->i_mb_height= ( param->i_height + 15 ) / 16;
     sps->i_chroma_format_idc = csp >= X264_CSP_I444 ? CHROMA_444 :
                                csp >= X264_CSP_I422 ? CHROMA_422 : CHROMA_420;
+    sps->i_bitdepth = param->i_bitdepth;
 
     sps->b_qpprime_y_zero_transform_bypass = param->rc.i_rc_method == X264_RC_CQP && param->rc.i_qp_constant == 0;
     if( sps->b_qpprime_y_zero_transform_bypass || sps->i_chroma_format_idc == CHROMA_444 )
         sps->i_profile_idc  = PROFILE_HIGH444_PREDICTIVE;
     else if( sps->i_chroma_format_idc == CHROMA_422 )
         sps->i_profile_idc  = PROFILE_HIGH422;
-    else if( BIT_DEPTH > 8 )
+    else if( param->i_bitdepth > 8 )
         sps->i_profile_idc  = PROFILE_HIGH10;
     else if( param->analyse.b_transform_8x8 || param->i_cqm_preset != X264_CQM_FLAT )
         sps->i_profile_idc  = PROFILE_HIGH;
@@ -287,8 +288,8 @@ void x264_sps_write( bs_t *s, x264_sps_t *sps )
         bs_write_ue( s, sps->i_chroma_format_idc );
         if( sps->i_chroma_format_idc == CHROMA_444 )
             bs_write1( s, 0 ); // separate_colour_plane_flag
-        bs_write_ue( s, BIT_DEPTH-8 ); // bit_depth_luma_minus8
-        bs_write_ue( s, BIT_DEPTH-8 ); // bit_depth_chroma_minus8
+        bs_write_ue( s, sps->i_bitdepth-8 ); // bit_depth_luma_minus8
+        bs_write_ue( s, sps->i_bitdepth-8 ); // bit_depth_chroma_minus8
         bs_write1( s, sps->b_qpprime_y_zero_transform_bypass );
         bs_write1( s, 0 ); // seq_scaling_matrix_present_flag
     }

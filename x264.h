@@ -292,6 +292,7 @@ typedef struct x264_param_t
     int         i_width;
     int         i_height;
     int         i_csp;         /* CSP of encoded bitstream */
+    int         i_bitdepth;
     int         i_level_idc;
     int         i_frame_total; /* number of frames to encode if known, else 0 */
 

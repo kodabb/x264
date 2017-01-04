@@ -3806,9 +3806,9 @@ static int encoder_frame_end( x264_t *h, x264_t *thread_current,
     pic_out->opaque = h->fenc->opaque;
 
     pic_out->img.i_csp = h->fdec->i_csp;
-#if HIGH_BIT_DEPTH
-    pic_out->img.i_csp |= X264_CSP_HIGH_DEPTH;
-#endif
+    if( h->param.i_bitdepth > 8 )
+        pic_out->img.i_csp |= X264_CSP_HIGH_DEPTH;
+
     pic_out->img.i_plane = h->fdec->i_plane;
     for( int i = 0; i < pic_out->img.i_plane; i++ )
     {
