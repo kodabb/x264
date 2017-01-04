@@ -157,6 +157,7 @@ typedef struct
 
     int b_qpprime_y_zero_transform_bypass;
     int i_chroma_format_idc;
+    int i_bitdepth;
 
 } x264_sps_t;
 

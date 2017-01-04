@@ -24,8 +24,6 @@
  * For more information, contact us at licensing@x264.com.
  *****************************************************************************/
 
-#include "common.h"
-
 #include <ctype.h>
 #include "osdep.h"
 #include "x264.h"
@@ -449,6 +447,7 @@ int x264_param_apply_profile( x264_param_t *param, const char *profile )
     if( !profile )
         return 0;
 
+    const int qp_bd_offset = 6 * (param->i_bitdepth-8);
     int p = profile_string_to_int( profile );
     if( p < 0 )
     {
@@ -456,7 +455,7 @@ int x264_param_apply_profile( x264_param_t *param, const char *profile )
         return -1;
     }
     if( p < PROFILE_HIGH444_PREDICTIVE && ((param->rc.i_rc_method == X264_RC_CQP && param->rc.i_qp_constant <= 0) ||
-        (param->rc.i_rc_method == X264_RC_CRF && (int)(param->rc.f_rf_constant + QP_BD_OFFSET) <= 0)) )
+        (param->rc.i_rc_method == X264_RC_CRF && (int)(param->rc.f_rf_constant + qp_bd_offset) <= 0)) )
     {
         x264_log_internal( X264_LOG_ERROR, "%s profile doesn't support lossless\n", profile );
         return -1;
@@ -471,9 +470,9 @@ int x264_param_apply_profile( x264_param_t *param, const char *profile )
         x264_log_internal( X264_LOG_ERROR, "%s profile doesn't support 4:2:2\n", profile );
         return -1;
     }
-    if( p < PROFILE_HIGH10 && BIT_DEPTH > 8 )
+    if( p < PROFILE_HIGH10 && param->i_bitdepth > 8 )
     {
-        x264_log_internal( X264_LOG_ERROR, "%s profile doesn't support a bit depth of %d\n", profile, BIT_DEPTH );
+        x264_log_internal( X264_LOG_ERROR, "%s profile doesn't support a bit depth of %d\n", profile, param->i_bitdepth );
         return -1;
     }
 
@@ -1081,7 +1080,7 @@ char *x264_param2string( x264_param_t *p, int b_res )
         s += sprintf( s, "%dx%d ", p->i_width, p->i_height );
         s += sprintf( s, "fps=%u/%u ", p->i_fps_num, p->i_fps_den );
         s += sprintf( s, "timebase=%u/%u ", p->i_timebase_num, p->i_timebase_den );
-        s += sprintf( s, "bitdepth=%d ", BIT_DEPTH );
+        s += sprintf( s, "bitdepth=%d ", p->i_bitdepth );
     }
 
     if( p->b_opencl )
