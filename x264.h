@@ -58,6 +58,15 @@ extern "C" {
 #define X264_API
 #endif
 
+/* Dedicated to Anton Evilril */
+#ifdef __GNUC__
+#    define X264_DEPRECATED __attribute__((deprecated))
+#elif defined(_MSC_VER)
+#    define X264_DEPRECATED __declspec(deprecated)
+#else
+#    define X264_DEPRECATED
+#endif
+
 /* x264_t:
  *      opaque handler for encoder */
 typedef struct x264_t x264_t;
@@ -673,13 +682,9 @@ int     x264_param_apply_profile( x264_param_t *, const char *profile );
  ****************************************************************************/
 
 /* x264_bit_depth:
- *      Specifies the number of bits per pixel that x264 uses. This is also the
- *      bit depth that x264 encodes in. If this value is > 8, x264 will read
- *      two bytes of input data for each pixel sample, and expect the upper
- *      (16-x264_bit_depth) bits to be zero.
- *      Note: The flag X264_CSP_HIGH_DEPTH must be used to specify the
- *      colorspace depth as well. */
-X264_API extern const int x264_bit_depth;
+ *      Warning: this symbol is deprecated and always set to 8 for backward
+ *      compatibility. You may use i_bitdepth in x264_param_t as replacement. */
+X264_API X264_DEPRECATED extern const int x264_bit_depth;
 
 /* x264_chroma_format:
  *      Specifies the chroma formats that x264 supports encoding. When this

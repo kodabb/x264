@@ -340,7 +340,7 @@ static void print_version_info( void )
     printf( "using an unknown compiler\n" );
 #endif
     printf( "x264 configuration: --bit-depth=%d --chroma-format=%s\n", X264_BIT_DEPTH, chroma_format_names[X264_CHROMA_FORMAT] );
-    printf( "libx264 configuration: --bit-depth=%d --chroma-format=%s\n", x264_bit_depth, chroma_format_names[x264_chroma_format] );
+    printf( "libx264 configuration: --chroma-format=%s\n", chroma_format_names[x264_chroma_format] );
     printf( "x264 license: " );
 #if HAVE_GPL
     printf( "GPL version 2 or later\n" );
@@ -519,7 +519,7 @@ static void help( x264_param_t *defaults, int longhelp )
 #else
         "no",
 #endif
-        x264_bit_depth
+        X264_BIT_DEPTH
       );
     H0( "Example usage:\n" );
     H0( "\n" );
@@ -1320,7 +1320,7 @@ static int init_vid_filters( char *sequence, hnd_t *handle, video_info_t *info, 
         return -1;
 
     char args[20];
-    sprintf( args, "bit_depth=%d", x264_bit_depth );
+    sprintf( args, "bit_depth=%d", X264_BIT_DEPTH );
 
     if( x264_init_vid_filter( "depth", handle, &filter, info, param, args ) )
         return -1;
