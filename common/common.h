@@ -115,6 +115,7 @@ do {\
  * Includes
  ****************************************************************************/
 #include "osdep.h"
+#include "log.h"
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdlib.h>
