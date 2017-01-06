@@ -26,6 +26,8 @@
 #ifndef X264_CPU_H
 #define X264_CPU_H
 
+#include "osdep.h"
+
 uint32_t x264_cpu_detect( void );
 int      x264_cpu_num_processors( void );
 void     x264_cpu_emms( void );

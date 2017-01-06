@@ -25,7 +25,10 @@
  * For more information, contact us at licensing@x264.com.
  *****************************************************************************/
 
-#include "common.h"
+#include "cpu.h"
+#include "log.h"
+#include "x264.h"
+#include <assert.h>
 
 #if HAVE_POSIXTHREAD && SYS_LINUX
 #include <sched.h>
