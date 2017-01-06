@@ -39,7 +39,6 @@
 #define XCHG(type,a,b) do { type t = a; a = b; b = t; } while( 0 )
 #define IS_DISPOSABLE(type) ( type == X264_TYPE_B )
 #define FIX8(f) ((int)(f*(1<<8)+.5))
-#define ALIGN(x,a) (((x)+((a)-1))&~((a)-1))
 #define ARRAY_ELEMS(a) ((sizeof(a))/(sizeof(a[0])))
 
 #define CHECKED_MALLOC( var, size )\
@@ -116,6 +115,7 @@ do {\
  ****************************************************************************/
 #include "osdep.h"
 #include "log.h"
+#include "mem.h"
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -250,13 +250,6 @@ static const uint8_t x264_scan8[16*3 + 3] =
 /****************************************************************************
  * General functions
  ****************************************************************************/
-/* x264_malloc : will do or emulate a memalign
- * you have to use x264_free for buffers allocated with x264_malloc */
-void *x264_malloc( int );
-void  x264_free( void * );
-
-/* x264_slurp_file: malloc space for the whole file and read it */
-char *x264_slurp_file( const char *filename );
 
 /* x264_param2string: return a (malloced) string containing most of
  * the encoding options */
