@@ -30,15 +30,7 @@
 /****************************************************************************
  * Macros
  ****************************************************************************/
-#define X264_MIN(a,b) ( (a)<(b) ? (a) : (b) )
-#define X264_MAX(a,b) ( (a)>(b) ? (a) : (b) )
-#define X264_MIN3(a,b,c) X264_MIN((a),X264_MIN((b),(c)))
-#define X264_MAX3(a,b,c) X264_MAX((a),X264_MAX((b),(c)))
-#define X264_MIN4(a,b,c,d) X264_MIN((a),X264_MIN3((b),(c),(d)))
-#define X264_MAX4(a,b,c,d) X264_MAX((a),X264_MAX3((b),(c),(d)))
-#define XCHG(type,a,b) do { type t = a; a = b; b = t; } while( 0 )
 #define IS_DISPOSABLE(type) ( type == X264_TYPE_B )
-#define FIX8(f) ((int)(f*(1<<8)+.5))
 #define ARRAY_ELEMS(a) ((sizeof(a))/(sizeof(a[0])))
 
 #define CHECKED_MALLOC( var, size )\
@@ -116,6 +108,7 @@ do {\
 #include "osdep.h"
 #include "log.h"
 #include "mem.h"
+#include "mathematics.h"
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -258,80 +251,12 @@ char *x264_param2string( x264_param_t *p, int b_res );
 /* log */
 void x264_log( x264_t *h, int i_level, const char *psz_fmt, ... );
 
-void x264_reduce_fraction( uint32_t *n, uint32_t *d );
-void x264_reduce_fraction64( uint64_t *n, uint64_t *d );
 void x264_cavlc_init( x264_t *h );
 void x264_cabac_init( x264_t *h );
 
 static ALWAYS_INLINE pixel x264_clip_pixel( int x )
 {
     return ( (x & ~PIXEL_MAX) ? (-x)>>31 & PIXEL_MAX : x );
-}
-
-static ALWAYS_INLINE int x264_clip3( int v, int i_min, int i_max )
-{
-    return ( (v < i_min) ? i_min : (v > i_max) ? i_max : v );
-}
-
-static ALWAYS_INLINE double x264_clip3f( double v, double f_min, double f_max )
-{
-    return ( (v < f_min) ? f_min : (v > f_max) ? f_max : v );
-}
-
-static ALWAYS_INLINE int x264_median( int a, int b, int c )
-{
-    int t = (a-b)&((a-b)>>31);
-    a -= t;
-    b += t;
-    b -= (b-c)&((b-c)>>31);
-    b += (a-b)&((a-b)>>31);
-    return b;
-}
-
-static ALWAYS_INLINE void x264_median_mv( int16_t *dst, int16_t *a, int16_t *b, int16_t *c )
-{
-    dst[0] = x264_median( a[0], b[0], c[0] );
-    dst[1] = x264_median( a[1], b[1], c[1] );
-}
-
-static ALWAYS_INLINE int x264_predictor_difference( int16_t (*mvc)[2], intptr_t i_mvc )
-{
-    int sum = 0;
-    for( int i = 0; i < i_mvc-1; i++ )
-    {
-        sum += abs( mvc[i][0] - mvc[i+1][0] )
-             + abs( mvc[i][1] - mvc[i+1][1] );
-    }
-    return sum;
-}
-
-static ALWAYS_INLINE uint16_t x264_cabac_mvd_sum( uint8_t *mvdleft, uint8_t *mvdtop )
-{
-    int amvd0 = mvdleft[0] + mvdtop[0];
-    int amvd1 = mvdleft[1] + mvdtop[1];
-    amvd0 = (amvd0 > 2) + (amvd0 > 32);
-    amvd1 = (amvd1 > 2) + (amvd1 > 32);
-    return amvd0 + (amvd1<<8);
-}
-
-extern const uint8_t x264_exp2_lut[64];
-extern const float x264_log2_lut[128];
-extern const float x264_log2_lz_lut[32];
-
-/* Not a general-purpose function; multiplies input by -1/6 to convert
- * qp to qscale. */
-static ALWAYS_INLINE int x264_exp2fix8( float x )
-{
-    int i = x*(-64.f/6.f) + 512.5f;
-    if( i < 0 ) return 0;
-    if( i > 1023 ) return 0xffff;
-    return (x264_exp2_lut[i&63]+256) << (i>>6) >> 8;
-}
-
-static ALWAYS_INLINE float x264_log2( uint32_t x )
-{
-    int lz = x264_clz( x );
-    return x264_log2_lut[(x<<lz>>24)&0x7f] + x264_log2_lz_lut[lz];
 }
 
 /****************************************************************************

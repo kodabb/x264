@@ -1078,31 +1078,6 @@ void x264_log( x264_t *h, int i_level, const char *psz_fmt, ... )
 }
 
 /****************************************************************************
- * x264_reduce_fraction:
- ****************************************************************************/
-#define REDUCE_FRACTION( name, type )\
-void name( type *n, type *d )\
-{                   \
-    type a = *n;    \
-    type b = *d;    \
-    type c;         \
-    if( !a || !b )  \
-        return;     \
-    c = a % b;      \
-    while( c )      \
-    {               \
-        a = b;      \
-        b = c;      \
-        c = a % b;  \
-    }               \
-    *n /= b;        \
-    *d /= b;        \
-}
-
-REDUCE_FRACTION( x264_reduce_fraction  , uint32_t )
-REDUCE_FRACTION( x264_reduce_fraction64, uint64_t )
-
-/****************************************************************************
  * x264_param2string:
  ****************************************************************************/
 char *x264_param2string( x264_param_t *p, int b_res )
