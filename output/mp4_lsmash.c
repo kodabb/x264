@@ -29,6 +29,7 @@
 
 #include "output.h"
 #include <lsmash.h>
+#include "common/osdep.h"
 
 #define H264_NALU_LENGTH_SIZE 4
 

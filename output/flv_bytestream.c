@@ -25,6 +25,7 @@
 
 #include "output.h"
 #include "flv_bytestream.h"
+#include "common/osdep.h"
 
 uint64_t flv_dbl2int( double value )
 {

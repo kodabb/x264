@@ -25,6 +25,7 @@
 
 #include "video.h"
 #include "internal.h"
+#include "common/mathematics.h"
 
 /* This filter calculates and store the frame's duration to the frame data
  * (if it is not already calculated when the frame arrives to this point)

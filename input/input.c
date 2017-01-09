@@ -25,6 +25,7 @@
  *****************************************************************************/
 
 #include "input.h"
+#include "common/mem.h"
 
 #ifdef _WIN32
 #include <io.h>

@@ -25,6 +25,8 @@
 
 #include "video.h"
 #include "internal.h"
+#include "common/common.h"
+
 #define NAME "cache"
 #define LAST_FRAME (h->first_frame + h->cur_size - 1)
 

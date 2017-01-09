@@ -24,6 +24,8 @@
  *****************************************************************************/
 
 #include "video.h"
+#include "common/mathematics.h"
+
 #define NAME "select_every"
 #define FAIL_IF_ERROR( cond, ... ) FAIL_IF_ERR( cond, NAME, __VA_ARGS__ )
 

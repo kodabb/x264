@@ -27,7 +27,10 @@
 #ifndef X264_CLI_H
 #define X264_CLI_H
 
-#include "common/common.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include "x264.h"
 
 /* In microseconds */
 #define UPDATE_INTERVAL 250000

@@ -23,8 +23,11 @@
  * For more information, contact us at licensing@x264.com.
  *****************************************************************************/
 
+#include <stdlib.h>
+
 #include "output.h"
 #include "matroska_ebml.h"
+#include "common/osdep.h"
 
 #define CLSIZE 1048576
 #define CHECK(x)\

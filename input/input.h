@@ -28,7 +28,12 @@
 #ifndef X264_INPUT_H
 #define X264_INPUT_H
 
+#include <stdio.h>
+
+#include "config.h"
 #include "x264cli.h"
+
+#include "common/osdep.h"
 
 #ifdef _WIN32
 #include <windows.h>

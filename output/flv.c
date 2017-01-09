@@ -23,8 +23,11 @@
  * For more information, contact us at licensing@x264.com.
  *****************************************************************************/
 
+#include <inttypes.h>
+
 #include "output.h"
 #include "flv_bytestream.h"
+#include "common/osdep.h"
 
 #define CHECK(x)\
 do {\

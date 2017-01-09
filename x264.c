@@ -39,11 +39,19 @@
 
 #include <signal.h>
 #include <getopt.h>
-#include "common/common.h"
 #include "x264cli.h"
 #include "input/input.h"
 #include "output/output.h"
 #include "filters/filters.h"
+#include "common/cpu.h"
+#include "common/osdep.h"
+#include "common/mathematics.h"
+
+#define MAX_BIT_DEPTH 10
+#define QP_BD_OFFSET (6*(MAX_BIT_DEPTH-8))
+#define QP_MAX_SPEC (51+QP_BD_OFFSET)
+#define QP_MAX (QP_MAX_SPEC+18)
+#define QP_MAX_MAX (51+2*6+18)
 
 #define FAIL_IF_ERROR( cond, ... ) FAIL_IF_ERR( cond, "x264", __VA_ARGS__ )
 

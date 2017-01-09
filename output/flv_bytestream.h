@@ -26,6 +26,8 @@
 #ifndef X264_FLV_BYTESTREAM_H
 #define X264_FLV_BYTESTREAM_H
 
+#include <stdio.h>
+
 /* offsets for packed values */
 #define FLV_AUDIO_SAMPLESSIZE_OFFSET 1
 #define FLV_AUDIO_SAMPLERATE_OFFSET  2

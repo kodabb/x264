@@ -26,6 +26,8 @@
  *****************************************************************************/
 
 #include "filters.h"
+#include <assert.h>
+
 #define RETURN_IF_ERROR( cond, ... ) RETURN_IF_ERR( cond, "options", NULL, __VA_ARGS__ )
 
 char **x264_split_options( const char *opt_str, const char * const *options )

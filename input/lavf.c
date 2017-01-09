@@ -25,6 +25,8 @@
  *****************************************************************************/
 
 #include "input.h"
+#include "common/mathematics.h"
+
 #define FAIL_IF_ERROR( cond, ... ) FAIL_IF_ERR( cond, "lavf", __VA_ARGS__ )
 #undef DECLARE_ALIGNED
 #include <libavformat/avformat.h>

@@ -25,6 +25,8 @@
  *****************************************************************************/
 
 #include "input.h"
+#include "common/threadpool.h"
+#include "common/mathematics.h"
 
 typedef struct
 {

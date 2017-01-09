@@ -23,6 +23,8 @@
  * For more information, contact us at licensing@x264.com.
  *****************************************************************************/
 
+#include "common/common.h"
+
 #include "video.h"
 #define NAME "depth"
 #define FAIL_IF_ERROR( cond, ... ) FAIL_IF_ERR( cond, NAME, __VA_ARGS__ )

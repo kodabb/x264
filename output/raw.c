@@ -25,6 +25,7 @@
  *****************************************************************************/
 
 #include "output.h"
+#include "common/osdep.h"
 
 static int open_file( char *psz_filename, hnd_t *p_handle, cli_output_opt_t *opt )
 {
