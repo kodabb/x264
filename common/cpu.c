@@ -304,7 +304,7 @@ uint32_t x264_cpu_detect( void )
         else if( cache == 64 )
             cpu |= X264_CPU_CACHELINE_64;
         else
-            x264_log( NULL, X264_LOG_WARNING, "unable to determine cacheline size\n" );
+            x264_log_internal( X264_LOG_WARNING, "unable to determine cacheline size\n" );
     }
 
 #if STACK_ALIGNMENT < 16

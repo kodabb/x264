@@ -27,6 +27,14 @@
 #include "log.h"
 #include "x264.h"
 
+void x264_log_internal( int i_level, const char *psz_fmt, ... )
+{
+    va_list arg;
+    va_start( arg, psz_fmt );
+    x264_log_default( NULL, i_level, psz_fmt, arg );
+    va_end( arg );
+}
+
 void x264_log_default( void *p_unused, int i_level, const char *psz_fmt, va_list arg )
 {
     char *psz_prefix;

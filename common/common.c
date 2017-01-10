@@ -293,7 +293,7 @@ static int param_apply_preset( x264_param_t *param, const char *preset )
     }
     else
     {
-        x264_log( NULL, X264_LOG_ERROR, "invalid preset '%s'\n", preset );
+        x264_log_internal( X264_LOG_ERROR, "invalid preset '%s'\n", preset );
         return -1;
     }
     return 0;
@@ -390,14 +390,14 @@ static int param_apply_tune( x264_param_t *param, const char *tune )
         }
         else
         {
-            x264_log( NULL, X264_LOG_ERROR, "invalid tune '%s'\n", s );
+            x264_log_internal( X264_LOG_ERROR, "invalid tune '%s'\n", s );
             x264_free( tmp );
             return -1;
         }
         if( 0 )
         {
     psy_failure:
-            x264_log( NULL, X264_LOG_WARNING, "only 1 psy tuning can be used: ignoring tune %s\n", s );
+            x264_log_internal( X264_LOG_WARNING, "only 1 psy tuning can be used: ignoring tune %s\n", s );
         }
         s = strtok( NULL, ",./-+" );
     }
@@ -456,28 +456,28 @@ int x264_param_apply_profile( x264_param_t *param, const char *profile )
     int p = profile_string_to_int( profile );
     if( p < 0 )
     {
-        x264_log( NULL, X264_LOG_ERROR, "invalid profile: %s\n", profile );
+        x264_log_internal( X264_LOG_ERROR, "invalid profile: %s\n", profile );
         return -1;
     }
     if( p < PROFILE_HIGH444_PREDICTIVE && ((param->rc.i_rc_method == X264_RC_CQP && param->rc.i_qp_constant <= 0) ||
         (param->rc.i_rc_method == X264_RC_CRF && (int)(param->rc.f_rf_constant + QP_BD_OFFSET) <= 0)) )
     {
-        x264_log( NULL, X264_LOG_ERROR, "%s profile doesn't support lossless\n", profile );
+        x264_log_internal( X264_LOG_ERROR, "%s profile doesn't support lossless\n", profile );
         return -1;
     }
     if( p < PROFILE_HIGH444_PREDICTIVE && (param->i_csp & X264_CSP_MASK) >= X264_CSP_I444 )
     {
-        x264_log( NULL, X264_LOG_ERROR, "%s profile doesn't support 4:4:4\n", profile );
+        x264_log_internal( X264_LOG_ERROR, "%s profile doesn't support 4:4:4\n", profile );
         return -1;
     }
     if( p < PROFILE_HIGH422 && (param->i_csp & X264_CSP_MASK) >= X264_CSP_I422 )
     {
-        x264_log( NULL, X264_LOG_ERROR, "%s profile doesn't support 4:2:2\n", profile );
+        x264_log_internal( X264_LOG_ERROR, "%s profile doesn't support 4:2:2\n", profile );
         return -1;
     }
     if( p < PROFILE_HIGH10 && BIT_DEPTH > 8 )
     {
-        x264_log( NULL, X264_LOG_ERROR, "%s profile doesn't support a bit depth of %d\n", profile, BIT_DEPTH );
+        x264_log_internal( X264_LOG_ERROR, "%s profile doesn't support a bit depth of %d\n", profile, BIT_DEPTH );
         return -1;
     }
 
@@ -491,12 +491,12 @@ int x264_param_apply_profile( x264_param_t *param, const char *profile )
         param->analyse.i_weighted_pred = X264_WEIGHTP_NONE;
         if( param->b_interlaced )
         {
-            x264_log( NULL, X264_LOG_ERROR, "baseline profile doesn't support interlacing\n" );
+            x264_log_internal( X264_LOG_ERROR, "baseline profile doesn't support interlacing\n" );
             return -1;
         }
         if( param->b_fake_interlaced )
         {
-            x264_log( NULL, X264_LOG_ERROR, "baseline profile doesn't support fake interlacing\n" );
+            x264_log_internal( X264_LOG_ERROR, "baseline profile doesn't support fake interlacing\n" );
             return -1;
         }
     }
@@ -1197,7 +1197,7 @@ void *x264_malloc( int i_size )
     }
 #endif
     if( !align_buf )
-        x264_log( NULL, X264_LOG_ERROR, "malloc of size %d failed\n", i_size );
+        x264_log_internal( X264_LOG_ERROR, "malloc of size %d failed\n", i_size );
     return align_buf;
 }
 

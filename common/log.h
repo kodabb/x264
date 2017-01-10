@@ -35,6 +35,8 @@
 #include <assert.h>
 #include <limits.h>
 
+void x264_log_internal( int i_level, const char *psz_fmt, ... );
+
 void x264_log_default( void *p_unused, int i_level, const char *psz_fmt, va_list arg );
 
 #endif

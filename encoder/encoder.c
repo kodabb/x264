@@ -422,7 +422,7 @@ static int validate_parameters( x264_t *h, int b_open )
 {
     if( !h->param.pf_log )
     {
-        x264_log( NULL, X264_LOG_ERROR, "pf_log not set! did you forget to call x264_param_default?\n" );
+        x264_log_internal( X264_LOG_ERROR, "pf_log not set! did you forget to call x264_param_default?\n" );
         return -1;
     }
 
