@@ -117,6 +117,25 @@ do {\
 #include <assert.h>
 #include <limits.h>
 
+/****************************************************************************
+ * API Templates
+ ****************************************************************************/
+#define x264_nal_encode x264_template(nal_encode)
+#define x264_encoder_reconfig x264_template(encoder_reconfig)
+#define x264_encoder_parameters x264_template(encoder_parameters)
+#define x264_encoder_headers x264_template(encoder_headers)
+#define x264_encoder_encode x264_template(encoder_encode)
+#define x264_encoder_close x264_template(encoder_close)
+#define x264_encoder_delayed_frames x264_template(encoder_delayed_frames)
+#define x264_encoder_maximum_delayed_frames x264_template(encoder_maximum_delayed_frames)
+#define x264_encoder_intra_refresh x264_template(encoder_intra_refresh)
+#define x264_encoder_invalidate_reference x264_template(encoder_invalidate_reference)
+
+/* This undef allows to rename the external symbol and force link failure in case
+ * of incompatible libraries. Then the define enables templating as above. */
+#undef x264_encoder_open
+#define x264_encoder_open x264_template(encoder_open)
+
 #if HAVE_INTERLACED
 #   define MB_INTERLACED h->mb.b_interlaced
 #   define SLICE_MBAFF h->sh.b_mbaff

@@ -40,6 +40,9 @@
 
 #define bs_write_ue bs_write_ue_big
 
+// forward declaration needed for template usage
+void x264_nal_encode( x264_t *h, uint8_t *dst, x264_nal_t *nal );
+
 static int encoder_frame_end( x264_t *h, x264_t *thread_current,
                               x264_nal_t **pp_nal, int *pi_nal,
                               x264_picture_t *pic_out );
