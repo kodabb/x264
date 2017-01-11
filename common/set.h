@@ -341,8 +341,11 @@ static const uint8_t x264_cqm_avci100_720p_8iy[64] =
     32,32,32,34,34,36,38,42
 };
 
+#define x264_cqm_init x264_template(cqm_init)
 int  x264_cqm_init( x264_t *h );
+#define x264_cqm_delete x264_template(cqm_delete)
 void x264_cqm_delete( x264_t *h );
+#define x264_cqm_parse_file x264_template(cqm_parse_file)
 int  x264_cqm_parse_file( x264_t *h, const char *filename );
 
 #endif

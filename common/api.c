@@ -48,6 +48,18 @@ int  x264_8_encoder_maximum_delayed_frames( x264_t *h );
 void x264_8_encoder_intra_refresh( x264_t * );
 int  x264_8_encoder_invalidate_reference( x264_t *, int64_t pts );
 
+x264_t *x264_10_encoder_open( x264_param_t * );
+void x264_10_nal_encode( x264_t *h, uint8_t *dst, x264_nal_t *nal );
+int  x264_10_encoder_reconfig( x264_t *, x264_param_t * );
+void x264_10_encoder_parameters( x264_t *, x264_param_t * );
+int  x264_10_encoder_headers( x264_t *, x264_nal_t **pp_nal, int *pi_nal );
+int  x264_10_encoder_encode( x264_t *, x264_nal_t **pp_nal, int *pi_nal, x264_picture_t *pic_in, x264_picture_t *pic_out );
+void x264_10_encoder_close( x264_t * );
+int  x264_10_encoder_delayed_frames( x264_t * );
+int  x264_10_encoder_maximum_delayed_frames( x264_t *h );
+void x264_10_encoder_intra_refresh( x264_t * );
+int  x264_10_encoder_invalidate_reference( x264_t *, int64_t pts );
+
 typedef struct x264_api_t {
     /* Internal reference to x264_t data */
     x264_t *x264;
@@ -84,7 +96,17 @@ x264_t *x264_encoder_open( x264_param_t *param )
 
         api->x264 = x264_8_encoder_open( param );
     } else if( param->i_bitdepth == 10 ) {
-        x264_log_internal( NULL, "Not yet implemented\n");
+        api->encoder_reconfig = x264_10_encoder_reconfig;
+        api->encoder_parameters = x264_10_encoder_parameters;
+        api->encoder_headers = x264_10_encoder_headers;
+        api->encoder_encode = x264_10_encoder_encode;
+        api->encoder_close = x264_10_encoder_close;
+        api->encoder_delayed_frames = x264_10_encoder_delayed_frames;
+        api->encoder_maximum_delayed_frames = x264_10_encoder_maximum_delayed_frames;
+        api->encoder_intra_refresh = x264_10_encoder_intra_refresh;
+        api->encoder_invalidate_reference = x264_10_encoder_invalidate_reference;
+
+        api->x264 = x264_10_encoder_open( param );
     }
 
     if( !api->x264 ) {

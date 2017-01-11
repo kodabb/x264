@@ -267,9 +267,12 @@ static const uint8_t x264_scan8[16*3 + 3] =
 char *x264_param2string( x264_param_t *p, int b_res );
 
 /* log */
+#define x264_log x264_template(log)
 void x264_log( x264_t *h, int i_level, const char *psz_fmt, ... );
 
+#define x264_cavlc_init x264_template(cavlc_init)
 void x264_cavlc_init( x264_t *h );
+#define x264_cabac_init x264_template(cabac_init)
 void x264_cabac_init( x264_t *h );
 
 static ALWAYS_INLINE pixel x264_clip_pixel( int x )

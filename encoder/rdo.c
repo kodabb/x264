@@ -46,6 +46,7 @@ static uint16_t cabac_size_5ones[128];
 #define bs_write_ue(s,v)   ((s)->i_bits_encoded += bs_size_ue(v))
 #define bs_write_se(s,v)   ((s)->i_bits_encoded += bs_size_se(v))
 #define bs_write_te(s,v,l) ((s)->i_bits_encoded += bs_size_te(v,l))
+#undef x264_macroblock_write_cavlc
 #define x264_macroblock_write_cavlc  static x264_macroblock_size_cavlc
 #include "cavlc.c"
 
@@ -55,6 +56,8 @@ static uint16_t cabac_size_5ones[128];
 #undef  x264_cabac_encode_decision_noup
 #undef  x264_cabac_encode_bypass
 #undef  x264_cabac_encode_terminal
+#undef  x264_cabac_encode_ue_bypass
+#undef  x264_macroblock_write_cabac
 #define x264_cabac_encode_decision(c,x,v) x264_cabac_size_decision(c,x,v)
 #define x264_cabac_encode_decision_noup(c,x,v) x264_cabac_size_decision_noup(c,x,v)
 #define x264_cabac_encode_terminal(c)     ((c)->f8_bits_encoded += 7)
