@@ -67,6 +67,7 @@ typedef struct
                                                   intptr_t ctx_block_cat, x264_cabac_t *cb );
 } x264_bitstream_function_t;
 
+#define x264_bitstream_init x264_template(bitstream_init)
 void x264_bitstream_init( int cpu, x264_bitstream_function_t *pf );
 
 /* A larger level table size theoretically could help a bit at extremely
