@@ -78,7 +78,7 @@ p16weight: .short 1,2,3,4,5,6,7,8
 
 
 // because gcc doesn't believe in using the free shift in add
-function x264_predict_4x4_h_armv6
+function predict_4x4_h_armv6
     ldrb    r1, [r0, #0*FDEC_STRIDE-1]
     ldrb    r2, [r0, #1*FDEC_STRIDE-1]
     ldrb    r3, [r0, #2*FDEC_STRIDE-1]
@@ -98,7 +98,7 @@ function x264_predict_4x4_h_armv6
     bx      lr
 endfunc
 
-function x264_predict_4x4_v_armv6
+function predict_4x4_v_armv6
     ldr     r1,  [r0, #0 - 1 * FDEC_STRIDE]
     str     r1,  [r0, #0 + 0 * FDEC_STRIDE]
     str     r1,  [r0, #0 + 1 * FDEC_STRIDE]
@@ -107,7 +107,7 @@ function x264_predict_4x4_v_armv6
     bx      lr
 endfunc
 
-function x264_predict_4x4_dc_armv6
+function predict_4x4_dc_armv6
     mov     ip, #0
     ldr     r1, [r0, #-FDEC_STRIDE]
     ldrb    r2, [r0, #0*FDEC_STRIDE-1]
@@ -130,7 +130,7 @@ function x264_predict_4x4_dc_armv6
     bx      lr
 endfunc
 
-function x264_predict_4x4_dc_top_neon
+function predict_4x4_dc_top_neon
     mov         r12, #FDEC_STRIDE
     sub         r1, r0, #FDEC_STRIDE
     vld1.32     d1[], [r1,:32]
@@ -159,7 +159,7 @@ endfunc
     uadd8   \a2, \a2, \c2
 .endm
 
-function x264_predict_4x4_ddr_armv6
+function predict_4x4_ddr_armv6
     ldr     r1, [r0, # -FDEC_STRIDE]
     ldrb    r2, [r0, # -FDEC_STRIDE-1]
     ldrb    r3, [r0, #0*FDEC_STRIDE-1]
@@ -188,7 +188,7 @@ function x264_predict_4x4_ddr_armv6
     pop     {r4-r6,pc}
 endfunc
 
-function x264_predict_4x4_ddl_neon
+function predict_4x4_ddl_neon
     sub         r0, #FDEC_STRIDE
     mov         ip, #FDEC_STRIDE
     vld1.64     {d0}, [r0], ip
@@ -207,7 +207,7 @@ function x264_predict_4x4_ddl_neon
     bx          lr
 endfunc
 
-function x264_predict_8x8_dc_neon
+function predict_8x8_dc_neon
     mov     ip, #0
     ldrd    r2, r3, [r1, #8]
     push    {r4-r5,lr}
@@ -231,7 +231,7 @@ function x264_predict_8x8_dc_neon
     pop    {r4-r5,pc}
 endfunc
 
-function x264_predict_8x8_h_neon
+function predict_8x8_h_neon
     add         r1, r1, #7
     mov         ip, #FDEC_STRIDE
     vld1.64     {d16}, [r1]
@@ -254,7 +254,7 @@ function x264_predict_8x8_h_neon
     bx          lr
 endfunc
 
-function x264_predict_8x8_v_neon
+function predict_8x8_v_neon
     add         r1, r1, #16
     mov         r12, #FDEC_STRIDE
     vld1.8      {d0}, [r1,:64]
@@ -264,7 +264,7 @@ function x264_predict_8x8_v_neon
     bx          lr
 endfunc
 
-function x264_predict_8x8_ddl_neon
+function predict_8x8_ddl_neon
     add         r1, #16
     vld1.8      {d0, d1}, [r1,:128]
     vmov.i8     q3, #0
@@ -292,7 +292,7 @@ function x264_predict_8x8_ddl_neon
     bx          lr
 endfunc
 
-function x264_predict_8x8_ddr_neon
+function predict_8x8_ddr_neon
     vld1.8      {d0-d3}, [r1,:128]
     vext.8      q2, q0, q1, #7
     vext.8      q3, q0, q1, #9
@@ -322,7 +322,7 @@ function x264_predict_8x8_ddr_neon
     bx          lr
 endfunc
 
-function x264_predict_8x8_vl_neon
+function predict_8x8_vl_neon
     add         r1, #16
     mov         r12, #FDEC_STRIDE
 
@@ -353,7 +353,7 @@ function x264_predict_8x8_vl_neon
     bx          lr
 endfunc
 
-function x264_predict_8x8_vr_neon
+function predict_8x8_vr_neon
     add         r1, #8
     mov         r12, #FDEC_STRIDE
     vld1.8      {d4,d5}, [r1,:64]
@@ -385,7 +385,7 @@ function x264_predict_8x8_vr_neon
     bx          lr
 endfunc
 
-function x264_predict_8x8_hd_neon
+function predict_8x8_hd_neon
     mov         r12, #FDEC_STRIDE
     add         r1, #7
 
@@ -418,7 +418,7 @@ function x264_predict_8x8_hd_neon
     bx          lr
 endfunc
 
-function x264_predict_8x8_hu_neon
+function predict_8x8_hu_neon
     mov         r12, #FDEC_STRIDE
     add         r1, #7
     vld1.8      {d7}, [r1]
@@ -451,7 +451,7 @@ function x264_predict_8x8_hu_neon
     bx          lr
 endfunc
 
-function x264_predict_8x8c_dc_top_neon
+function predict_8x8c_dc_top_neon
     sub         r2,  r0,  #FDEC_STRIDE
     mov         r1,  #FDEC_STRIDE
     vld1.8      {d0}, [r2,:64]
@@ -464,7 +464,7 @@ function x264_predict_8x8c_dc_top_neon
     b           pred8x8_dc_end
 endfunc
 
-function x264_predict_8x8c_dc_left_neon
+function predict_8x8c_dc_left_neon
     mov         r1,  #FDEC_STRIDE
     sub         r2,  r0,  #1
     ldcol.8     d0,  r2,  r1
@@ -476,7 +476,7 @@ function x264_predict_8x8c_dc_left_neon
     b           pred8x8_dc_end
 endfunc
 
-function x264_predict_8x8c_dc_neon
+function predict_8x8c_dc_neon
     sub         r2,  r0,  #FDEC_STRIDE
     mov         r1,  #FDEC_STRIDE
     vld1.8      {d0}, [r2,:64]
@@ -502,7 +502,7 @@ pred8x8_dc_end:
     bx          lr
 endfunc
 
-function x264_predict_8x8c_h_neon
+function predict_8x8c_h_neon
     sub         r1, r0, #1
     mov         ip, #FDEC_STRIDE
 .rept 4
@@ -514,7 +514,7 @@ function x264_predict_8x8c_h_neon
     bx          lr
 endfunc
 
-function x264_predict_8x8c_v_neon
+function predict_8x8c_v_neon
     sub         r0, r0, #FDEC_STRIDE
     mov         ip, #FDEC_STRIDE
     vld1.64     {d0}, [r0,:64], ip
@@ -524,7 +524,7 @@ function x264_predict_8x8c_v_neon
     bx          lr
 endfunc
 
-function x264_predict_8x8c_p_neon
+function predict_8x8c_p_neon
     sub         r3,  r0,  #FDEC_STRIDE
     mov         r1,  #FDEC_STRIDE
     add         r2,  r3,  #4
@@ -573,7 +573,7 @@ function x264_predict_8x8c_p_neon
 endfunc
 
 
-function x264_predict_8x16c_dc_top_neon
+function predict_8x16c_dc_top_neon
     sub         r2,  r0,  #FDEC_STRIDE
     mov         r1,  #FDEC_STRIDE
     vld1.8      {d0}, [r2,:64]
@@ -598,7 +598,7 @@ function x264_predict_8x16c_dc_top_neon
     bx          lr
 endfunc
 
-function x264_predict_8x16c_h_neon
+function predict_8x16c_h_neon
     sub         r1, r0, #1
     mov         ip, #FDEC_STRIDE
 .rept 8
@@ -610,7 +610,7 @@ function x264_predict_8x16c_h_neon
     bx          lr
 endfunc
 
-function x264_predict_8x16c_p_neon
+function predict_8x16c_p_neon
     sub         r3,  r0,  #FDEC_STRIDE
     mov         r1,  #FDEC_STRIDE
     add         r2,  r3,  #4
@@ -668,7 +668,7 @@ function x264_predict_8x16c_p_neon
 endfunc
 
 
-function x264_predict_16x16_dc_top_neon
+function predict_16x16_dc_top_neon
     sub         r2,  r0,  #FDEC_STRIDE
     mov         r1,  #FDEC_STRIDE
     vld1.8      {q0}, [r2,:128]
@@ -678,7 +678,7 @@ function x264_predict_16x16_dc_top_neon
     b           pred16x16_dc_end
 endfunc
 
-function x264_predict_16x16_dc_left_neon
+function predict_16x16_dc_left_neon
     mov         r1,  #FDEC_STRIDE
     sub         r2,  r0,  #1
     ldcol.8     d0,  r2,  r1
@@ -689,7 +689,7 @@ function x264_predict_16x16_dc_left_neon
     b           pred16x16_dc_end
 endfunc
 
-function x264_predict_16x16_dc_neon
+function predict_16x16_dc_neon
     sub         r3, r0, #FDEC_STRIDE
     sub         r0, r0, #1
     vld1.64     {d0-d1}, [r3,:128]
@@ -727,7 +727,7 @@ pred16x16_dc_end:
     bx          lr
 endfunc
 
-function x264_predict_16x16_h_neon
+function predict_16x16_h_neon
     sub         r1, r0, #1
     mov         ip, #FDEC_STRIDE
 .rept 8
@@ -741,7 +741,7 @@ function x264_predict_16x16_h_neon
     bx          lr
 endfunc
 
-function x264_predict_16x16_v_neon
+function predict_16x16_v_neon
     sub         r0, r0, #FDEC_STRIDE
     mov         ip, #FDEC_STRIDE
     vld1.64     {d0-d1}, [r0,:128], ip
@@ -751,7 +751,7 @@ function x264_predict_16x16_v_neon
     bx          lr
 endfunc
 
-function x264_predict_16x16_p_neon
+function predict_16x16_p_neon
     sub         r3,  r0,  #FDEC_STRIDE
     mov         r1,  #FDEC_STRIDE
     add         r2,  r3,  #8

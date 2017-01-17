@@ -74,7 +74,7 @@ mask_1bit:
 .endm
 
 // quant_2x2_dc( int16_t dct[4], int mf, int bias )
-function x264_quant_2x2_dc_neon
+function quant_2x2_dc_neon
     vld1.64     {d0}, [r0,:64]
     vabs.s16    d3,  d0
     vdup.16     d2,  r2
@@ -90,7 +90,7 @@ function x264_quant_2x2_dc_neon
 endfunc
 
 // quant_4x4_dc( int16_t dct[16], int mf, int bias )
-function x264_quant_4x4_dc_neon
+function quant_4x4_dc_neon
     vld1.64     {d28-d31}, [r0,:128]
     vabs.s16    q8,  q14
     vabs.s16    q9,  q15
@@ -102,7 +102,7 @@ function x264_quant_4x4_dc_neon
 endfunc
 
 // quant_4x4( int16_t dct[16], uint16_t mf[16], uint16_t bias[16] )
-function x264_quant_4x4_neon
+function quant_4x4_neon
     vld1.64     {d28-d31}, [r0,:128]
     vabs.s16    q8,  q14
     vabs.s16    q9,  q15
@@ -114,7 +114,7 @@ function x264_quant_4x4_neon
 endfunc
 
 // quant_4x4x4( int16_t dct[4][16], uint16_t mf[16], uint16_t bias[16] )
-function x264_quant_4x4x4_neon
+function quant_4x4x4_neon
     vpush       {d8-d15}
     vld1.64     {d28-d31}, [r0,:128]
     vabs.s16    q8,  q14
@@ -155,7 +155,7 @@ function x264_quant_4x4x4_neon
 endfunc
 
 // quant_8x8( int16_t dct[64], uint16_t mf[64], uint16_t bias[64] )
-function x264_quant_8x8_neon
+function quant_8x8_neon
     vld1.64     {d28-d31}, [r0,:128]
     vabs.s16    q8,  q14
     vabs.s16    q9,  q15
@@ -190,7 +190,7 @@ endfunc
 
 // dequant_4x4( int16_t dct[16], int dequant_mf[6][16], int i_qp )
 .macro DEQUANT size bits
-function x264_dequant_\size\()_neon
+function dequant_\size\()_neon
     DEQUANT_START \bits+2, \bits
 .ifc \size, 8x8
     mov         r2,  #4
@@ -271,7 +271,7 @@ DEQUANT 4x4, 4
 DEQUANT 8x8, 6
 
 // dequant_4x4_dc( int16_t dct[16], int dequant_mf[6][16], int i_qp )
-function x264_dequant_4x4_dc_neon
+function dequant_4x4_dc_neon
     DEQUANT_START 6, 6, yes
     blt         dequant_4x4_dc_rshift
 
@@ -317,7 +317,7 @@ dequant_4x4_dc_rshift:
 endfunc
 
 .macro decimate_score_1x size
-function x264_decimate_score\size\()_neon
+function decimate_score\size\()_neon
     vld1.16     {q0, q1}, [r0, :128]
     movrel      r3, mask_2bit
     vmov.s8     q3,  #0x01
@@ -346,7 +346,7 @@ function x264_decimate_score\size\()_neon
     lsr         r1,  r1,  #2
 .endif
     rbit        r1,  r1
-    movrelx     r3,  X(x264_decimate_table4), r2
+    movrelx     r3,  X(decimate_table4), r2
 1:
     clz         r2,  r1
     lsl         r1,  r1,  r2
@@ -362,7 +362,7 @@ endfunc
 decimate_score_1x 15
 decimate_score_1x 16
 
-function x264_decimate_score64_neon
+function decimate_score64_neon
     push        {lr}
     vld1.16     {q8,  q9},  [r0, :128]!
     vld1.16     {q10, q11}, [r0, :128]!
@@ -415,7 +415,7 @@ function x264_decimate_score64_neon
     mvn         r12, r12
     mov         r0,  #0
     mov         lr,  #32
-    movrelx     r3,  X(x264_decimate_table8), r2
+    movrelx     r3,  X(decimate_table8), r2
     beq         2f
 1:
     clz         r2,  r1
@@ -448,7 +448,7 @@ function x264_decimate_score64_neon
 endfunc
 
 // int coeff_last( int16_t *l )
-function x264_coeff_last4_arm
+function coeff_last4_arm
     ldrd        r2,  r3,  [r0]
     subs        r0,  r3,  #0
     movne       r0,  #2
@@ -458,7 +458,7 @@ function x264_coeff_last4_arm
     bx          lr
 endfunc
 
-function x264_coeff_last8_arm
+function coeff_last8_arm
     ldrd        r2,  r3,  [r0, #8]
     orrs        ip,  r2,  r3
     movne       r0,  #4
@@ -473,7 +473,7 @@ function x264_coeff_last8_arm
 endfunc
 
 .macro COEFF_LAST_1x size
-function x264_coeff_last\size\()_neon
+function coeff_last\size\()_neon
 .if \size == 15
     sub         r0,  r0,  #2
 .endif
@@ -499,7 +499,7 @@ endfunc
 COEFF_LAST_1x 15
 COEFF_LAST_1x 16
 
-function x264_coeff_last64_neon
+function coeff_last64_neon
     vld1.64     {d16-d19}, [r0,:128]!
     vqmovn.u16  d16, q8
     vqmovn.u16  d17, q9
@@ -544,7 +544,7 @@ function x264_coeff_last64_neon
     bx          lr
 endfunc
 
-function x264_denoise_dct_neon
+function denoise_dct_neon
 1:  subs        r3,  r3,  #16
     vld1.16     {q0,  q1},  [r0]
     vld1.32     {q12, q13}, [r1]!
