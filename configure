@@ -81,7 +81,6 @@ cc_cflags() {
         [[ "$arg" = -falign-loops* ]] && arg=
         [ "$arg" = -fno-tree-vectorize ] && arg=
         [ "$arg" = -Wshadow ] && arg=
-        [ "$arg" = -Wno-maybe-uninitialized ] && arg=
         [[ "$arg" = -mpreferred-stack-boundary* ]] && arg=
         [[ "$arg" = -l* ]] && arg=
         [[ "$arg" = -L* ]] && arg=
@@ -1239,10 +1238,6 @@ if cc_check '' -Wshadow ; then
     CFLAGS="-Wshadow $CFLAGS"
 fi
 
-if cc_check '' -Wmaybe-uninitialized ; then
-    CFLAGS="-Wno-maybe-uninitialized $CFLAGS"
-fi
-
 if [ $compiler = ICC -o $compiler = ICL ] ; then
     if cc_check 'extras/intel_dispatcher.h' '' 'x264_intel_dispatcher_override();' ; then
         define HAVE_INTEL_DISPATCHER
@@ -1439,7 +1434,7 @@ if [ "$shared" = "yes" ]; then
     elif [ "$SYS" = "MACOSX" ]; then
         echo "SOSUFFIX=dylib" >> config.mak
         echo "SONAME=libx264.$API.dylib" >> config.mak
-        echo "SOFLAGS=-shared -dynamiclib -Wl,-single_module -Wl,-read_only_relocs,suppress -install_name \$(DESTDIR)\$(libdir)/\$(SONAME) $SOFLAGS" >> config.mak
+        echo "SOFLAGS=-shared -dynamiclib -Wl,-single_module -install_name \$(DESTDIR)\$(libdir)/\$(SONAME) $SOFLAGS" >> config.mak
     elif [ "$SYS" = "SunOS" ]; then
         echo "SOSUFFIX=so" >> config.mak
         echo "SONAME=libx264.so.$API" >> config.mak
