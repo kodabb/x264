@@ -28,11 +28,7 @@
 #ifndef X264_BS_H
 #define X264_BS_H
 
-typedef struct
-{
-    uint8_t i_bits;
-    uint8_t i_size;
-} vlc_t;
+#include "common/vlc.h"
 
 typedef struct
 {
@@ -59,12 +55,6 @@ typedef struct
     int32_t mask;
     ALIGNED_16( dctcoef level[18] );
 } x264_run_level_t;
-
-extern const vlc_t x264_coeff0_token[6];
-extern const vlc_t x264_coeff_token[6][16][4];
-extern const vlc_t x264_total_zeros[15][16];
-extern const vlc_t x264_total_zeros_2x2_dc[3][4];
-extern const vlc_t x264_total_zeros_2x4_dc[7][8];
 
 typedef struct
 {

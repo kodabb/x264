@@ -109,6 +109,7 @@ do {\
 #include "log.h"
 #include "mem.h"
 #include "mathematics.h"
+#include "tables.h"
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdlib.h>
