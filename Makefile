@@ -58,7 +58,7 @@ SRCCLI += input/avs.c
 endif
 
 ifneq ($(findstring HAVE_THREAD 1, $(CONFIG)),)
-SRCCLI += input/thread.c
+SRCCLIBD += input/thread.c
 SRCS   += common/threadpool.c
 endif
 

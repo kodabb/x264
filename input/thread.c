@@ -28,6 +28,8 @@
 #include "common/threadpool.h"
 #include "common/mathematics.h"
 
+#define thread_input x264_glue3(thread, BIT_DEPTH, input)
+
 typedef struct
 {
     cli_input_t input;
