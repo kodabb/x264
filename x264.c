@@ -548,7 +548,6 @@ static void help( x264_param_t *defaults, int longhelp )
         "                                  Overrides all settings.\n" );
     H2(
 #if X264_CHROMA_FORMAT <= X264_CSP_I420
-#if X264_BIT_DEPTH==8
         "                                  - baseline:\n"
         "                                    --no-8x8dct --bframes 0 --no-cabac\n"
         "                                    --cqm flat --weightp 0\n"
@@ -559,7 +558,6 @@ static void help( x264_param_t *defaults, int longhelp )
         "                                    No lossless.\n"
         "                                  - high:\n"
         "                                    No lossless.\n"
-#endif
         "                                  - high10:\n"
         "                                    No lossless.\n"
         "                                    Support for bit depth 8-10.\n"
@@ -576,10 +574,7 @@ static void help( x264_param_t *defaults, int longhelp )
         else H0(
         "                                  - "
 #if X264_CHROMA_FORMAT <= X264_CSP_I420
-#if X264_BIT_DEPTH==8
-        "baseline,main,high,"
-#endif
-        "high10,"
+        "baseline,main,high,high10,"
 #endif
 #if X264_CHROMA_FORMAT <= X264_CSP_I422
         "high422,"
@@ -892,6 +887,7 @@ static void help( x264_param_t *defaults, int longhelp )
     H1( "      --output-csp <string>   Specify output colorspace [\"%s\"]\n"
         "                                  - %s\n", output_csp_names[0], stringify_names( buf, output_csp_names ) );
     H1( "      --input-depth <integer> Specify input bit depth for raw input\n" );
+    H1( "      --output-depth <integer> Specify output bit depth\n" );
     H1( "      --input-range <string>  Specify input color range [\"%s\"]\n"
         "                                  - %s\n", range_names[0], stringify_names( buf, range_names ) );
     H1( "      --input-res <intxint>   Specify input resolution (width x height)\n" );
@@ -980,6 +976,7 @@ typedef enum
     OPT_INPUT_RES,
     OPT_INPUT_CSP,
     OPT_INPUT_DEPTH,
+    OPT_OUTPUT_DEPTH,
     OPT_DTS_COMPRESSION,
     OPT_OUTPUT_CSP,
     OPT_INPUT_RANGE,
@@ -1147,6 +1144,7 @@ static struct option long_options[] =
     { "input-res",   required_argument, NULL, OPT_INPUT_RES },
     { "input-csp",   required_argument, NULL, OPT_INPUT_CSP },
     { "input-depth", required_argument, NULL, OPT_INPUT_DEPTH },
+    { "output-depth", required_argument, NULL, OPT_OUTPUT_DEPTH },
     { "dts-compress",      no_argument, NULL, OPT_DTS_COMPRESSION },
     { "output-csp",  required_argument, NULL, OPT_OUTPUT_CSP },
     { "input-range", required_argument, NULL, OPT_INPUT_RANGE },
@@ -1524,6 +1522,9 @@ static int parse( int argc, char **argv, x264_param_t *param, cli_opt_t *opt )
                 break;
             case OPT_INPUT_DEPTH:
                 input_opt.bit_depth = atoi( optarg );
+                break;
+            case OPT_OUTPUT_DEPTH:
+                param->i_bitdepth = atoi( optarg );
                 break;
             case OPT_DTS_COMPRESSION:
                 output_opt.use_dts_compress = 1;
