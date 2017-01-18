@@ -27,7 +27,13 @@
 #include "internal.h"
 #include "common/common.h"
 
-#define NAME "cache"
+#define cache_filter x264_glue3(cache, BIT_DEPTH, filter)
+#if BIT_DEPTH == 8
+#define NAME "cache_8"
+#else
+#define NAME "cache_10"
+#endif
+
 #define LAST_FRAME (h->first_frame + h->cur_size - 1)
 
 typedef struct

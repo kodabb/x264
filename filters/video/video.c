@@ -46,12 +46,14 @@ void x264_register_vid_filters( void )
 {
     extern cli_vid_filter_t source_filter;
     first_filter = &source_filter;
-    REGISTER_VFILTER( cache );
+    REGISTER_VFILTER( cache_8 );
+    REGISTER_VFILTER( depth_8 );
+    REGISTER_VFILTER( cache_10 );
+    REGISTER_VFILTER( depth_10 );
     REGISTER_VFILTER( crop );
     REGISTER_VFILTER( fix_vfr_pts );
     REGISTER_VFILTER( resize );
     REGISTER_VFILTER( select_every );
-    REGISTER_VFILTER( depth );
 #if HAVE_GPL
 #endif
 }
