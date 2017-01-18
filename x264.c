@@ -1319,10 +1319,11 @@ static int init_vid_filters( char *sequence, hnd_t *handle, video_info_t *info, 
     if( x264_init_vid_filter( "resize", handle, &filter, info, param, NULL ) )
         return -1;
 
-    char args[20];
-    sprintf( args, "bit_depth=%d", X264_BIT_DEPTH );
+    char args[20], name[20];
+    sprintf( args, "bit_depth=%d", param->i_bitdepth );
+    sprintf( name, "depth_%d", param->i_bitdepth );
 
-    if( x264_init_vid_filter( "depth", handle, &filter, info, param, args ) )
+    if( x264_init_vid_filter( name, handle, &filter, info, param, args ) )
         return -1;
 
     return 0;

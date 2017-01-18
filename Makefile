@@ -29,8 +29,10 @@ SRCCLI = x264.c input/input.c input/timecode.c input/raw.c input/y4m.c \
          output/raw.c output/matroska.c output/matroska_ebml.c \
          output/flv.c output/flv_bytestream.c filters/filters.c \
          filters/video/video.c filters/video/source.c filters/video/internal.c \
-         filters/video/resize.c filters/video/cache.c filters/video/fix_vfr_pts.c \
-         filters/video/select_every.c filters/video/crop.c filters/video/depth.c
+         filters/video/resize.c filters/video/fix_vfr_pts.c \
+         filters/video/select_every.c filters/video/crop.c
+
+SRCCLIBD = filters/video/depth.c filters/video/cache.c
 
 SRCSO =
 SRCSOCL =
@@ -191,7 +193,9 @@ OBJCLI += $(SRCCLI:%.c=%.o)
 OBJSO  += $(SRCSO:%.c=%.o)
 
 OBJS += $(SRCS:%.c=8bit/%.o) $(SRCSOCL:%.c=8bit/%.o)
+OBJCLI += $(SRCCLIBD:%.c=8bit/%.o)
 OBJS += $(SRCS:%.c=10bit/%.o)
+OBJCLI += $(SRCCLIBD:%.c=10bit/%.o)
 
 .PHONY: all default fprofiled clean distclean install install-* uninstall cli lib-* etags
 
