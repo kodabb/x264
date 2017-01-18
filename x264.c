@@ -1633,6 +1633,7 @@ generic_option:
 
     /* init threaded input while the information about the input video is unaltered by filtering */
 #if HAVE_THREAD
+    cli_input_t thread_input = param->i_bitdepth == 8 ? thread_8_input : thread_10_input;
     if( info.thread_safe && (b_thread_input || param->i_threads > 1
         || (param->i_threads == X264_THREADS_AUTO && x264_cpu_num_processors() > 1)) )
     {
