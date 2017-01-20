@@ -168,4 +168,12 @@ int x264_field_vsad( x264_t *h, int mb_x, int mb_y );
 #define x264_intra_satd_x3_8x16c x264_template(intra_satd_x3_8x16c)
 #define x264_intra_satd_x3_8x8c x264_template(intra_satd_x3_8x8c)
 
+#define x264_intra_sad_x3_8x16c_mmx2 x264_template(intra_sad_x3_8x16c_mmx2)
+#define x264_intra_sad_x3_8x16c_sse2 x264_template(intra_sad_x3_8x16c_sse2)
+#define x264_intra_satd_x3_8x16c_avx x264_template(intra_satd_x3_8x16c_avx)
+#define x264_intra_satd_x3_8x16c_mmx2 x264_template(intra_satd_x3_8x16c_mmx2)
+#define x264_intra_satd_x3_8x16c_sse2 x264_template(intra_satd_x3_8x16c_sse2)
+#define x264_intra_satd_x3_8x16c_sse4 x264_template(intra_satd_x3_8x16c_sse4)
+#define x264_intra_satd_x3_8x16c_ssse3 x264_template(intra_satd_x3_8x16c_ssse3)
+
 #endif

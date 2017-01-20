@@ -740,6 +740,13 @@ BRANCH_INSTR jz, je, jnz, jne, jl, jle, jnl, jnle, jg, jge, jng, jnge, ja, jae, 
     extern %1
 %endmacro
 
+; like cextern, but only the default x264 prefix
+%macro cextern_classic 1
+    %xdefine %1 mangle(x264 %+ _ %+ %1)
+    CAT_XDEFINE cglobaled_, %1, 1
+    extern %1
+%endmacro
+
 %macro const 1-2+
     %xdefine %1 mangle(private_prefix %+ _ %+ %1)
     %if FORMAT_ELF

@@ -61,17 +61,17 @@ pq_ffffffff: times 2 dq 0xffffffff
 cextern pd_8
 cextern pd_0123
 cextern pd_4567
-cextern cabac_entropy
-cextern cabac_transition
-cextern cabac_size_unary
-cextern cabac_transition_unary
-cextern dct4_weight_tab
-cextern dct8_weight_tab
-cextern dct4_weight2_tab
-cextern dct8_weight2_tab
-cextern last_coeff_flag_offset_8x8
-cextern significant_coeff_flag_offset_8x8
-cextern coeff_flag_offset_chroma_422_dc
+cextern_classic cabac_entropy
+cextern_classic cabac_transition
+cextern_classic cabac_size_unary
+cextern_classic cabac_transition_unary
+cextern_classic dct4_weight_tab
+cextern_classic dct8_weight_tab
+cextern_classic dct4_weight2_tab
+cextern_classic dct8_weight2_tab
+cextern_classic last_coeff_flag_offset_8x8
+cextern_classic significant_coeff_flag_offset_8x8
+cextern_classic coeff_flag_offset_chroma_422_dc
 
 SECTION .text
 
