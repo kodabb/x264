@@ -34,14 +34,14 @@ SRCCLI = x264.c input/input.c input/timecode.c input/raw.c input/y4m.c \
 
 SRCCLIBD = filters/video/depth.c filters/video/cache.c
 
+SRCCHK = tools/checkasm.c
+
 SRCSO =
 SRCSOCL =
 
 OBJS =
 OBJSO =
 OBJCLI =
-
-OBJCHK = tools/checkasm.o
 
 OBJEXAMPLE = example.o
 
@@ -114,7 +114,7 @@ OBJASM += $(ASMSRC:%.asm=10bit/%.o) $(ASMSRC10:%.asm=10bit/%.o)
 endif
 
 $(OBJASM): common/x86/x86inc.asm common/x86/x86util.asm
-OBJCHK += tools/checkasm-a.o
+SRCCHK += tools/checkasm-a.c
 endif
 endif
 
@@ -142,7 +142,7 @@ ifneq ($(findstring HAVE_BITDEPTH10, $(CONFIG)),)
 OBJASM += $(ASMSRC:%.S=10bit/%.o)
 endif
 
-OBJCHK += tools/checkasm-arm.o
+SRCCHK += tools/checkasm-arm.c
 endif
 endif
 
@@ -168,7 +168,7 @@ ifneq ($(findstring HAVE_BITDEPTH10, $(CONFIG)),)
 OBJASM += $(ASMSRC:%.S=10bit/%.o)
 endif
 
-OBJCHK += tools/checkasm-aarch64.o
+SRCCHK += tools/checkasm-aarch64.c
 endif
 endif
 
@@ -207,10 +207,12 @@ OBJSO  += $(SRCSO:%.c=%.o)
 ifneq ($(findstring HAVE_BITDEPTH8, $(CONFIG)),)
 OBJS += $(SRCS:%.c=8bit/%.o) $(SRCSOCL:%.c=8bit/%.o)
 OBJCLI += $(SRCCLIBD:%.c=8bit/%.o)
+OBJCHK8 = $(SRCCHK:%.c=8bit/%.o)
 endif
 ifneq ($(findstring HAVE_BITDEPTH10, $(CONFIG)),)
 OBJS += $(SRCS:%.c=10bit/%.o)
 OBJCLI += $(SRCCLIBD:%.c=10bit/%.o)
+OBJCHK10 = $(SRCCHK:%.c=10bit/%.o)
 endif
 
 .PHONY: all default fprofiled clean distclean install install-* uninstall cli lib-* etags
@@ -228,22 +230,39 @@ $(SONAME): $(GENERATED) .depend $(OBJS) $(OBJASM) $(OBJSO)
 	$(LD)$@ $(OBJS) $(OBJASM) $(OBJSO) $(SOFLAGS) $(LDFLAGS)
 
 ifneq ($(EXE),)
-.PHONY: x264 checkasm example
+.PHONY: x264 checkasm8 checkasm10 example
 x264: x264$(EXE)
-checkasm: checkasm$(EXE)
+ifneq ($(findstring HAVE_BITDEPTH8, $(CONFIG)),)
+checkasm8: checkasm8$(EXE)
+endif
+ifneq ($(findstring HAVE_BITDEPTH10, $(CONFIG)),)
+checkasm10: checkasm10$(EXE)
+endif
 example: example$(EXE)
 endif
 
 x264$(EXE): $(GENERATED) .depend $(OBJCLI) $(CLI_LIBX264)
 	$(LD)$@ $(OBJCLI) $(CLI_LIBX264) $(LDFLAGSCLI) $(LDFLAGS)
 
-checkasm$(EXE): $(GENERATED) .depend $(OBJCHK) $(LIBX264)
-	$(LD)$@ $(OBJCHK) $(LIBX264) $(LDFLAGS)
+.PHONY: checkasm
+ifneq ($(findstring HAVE_BITDEPTH8, $(CONFIG)),)
+checkasm: checkasm8$(EXE)
+endif
+ifneq ($(findstring HAVE_BITDEPTH10, $(CONFIG)),)
+checkasm: checkasm10$(EXE)
+endif
+
+checkasm8$(EXE): CHECKASMOBJS = $(OBJCHK8)
+checkasm10$(EXE): CHECKASMOBJS = $(OBJCHK10)
+checkasm8$(EXE): $(OBJCHK8)
+checkasm10$(EXE): $(OBJCHK10)
+checkasm8$(EXE) checkasm10$(EXE): $(GENERATED) .depend $(LIBX264)
+	$(LD)$@ $(CHECKASMOBJS) $(LIBX264) $(LDFLAGS)
 
 example$(EXE): $(GENERATED) .depend $(OBJEXAMPLE) $(LIBX264)
 	$(LD)$@ $(OBJEXAMPLE) $(LIBX264) $(LDFLAGS)
 
-$(OBJS) $(OBJASM) $(OBJSO) $(OBJCLI) $(OBJCHK) $(OBJEXAMPLE): .depend
+$(OBJS) $(OBJASM) $(OBJSO) $(OBJCLI) $(OBJCHK8) $(OBJCHK10) $(OBJEXAMPLE): .depend
 
 8bit/%.o: CPPFLAGS += -DHIGH_BIT_DEPTH=0 -DBIT_DEPTH=8
 8bit/%.o: ASFLAGS += -DHIGH_BIT_DEPTH=0 -DBIT_DEPTH=8 -Dprivate_prefix=x264_8
