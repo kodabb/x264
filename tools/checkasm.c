@@ -230,9 +230,13 @@ static void print_bench(void)
 static void (*simd_warmup_func)( void ) = NULL;
 #define simd_warmup() do { if( simd_warmup_func ) simd_warmup_func(); } while( 0 )
 
+#define x264_checkasm_call x264_template(checkasm_call)
+#define x264_stack_pagealign x264_template(stack_pagealign)
 #if ARCH_X86 || ARCH_X86_64
 int x264_stack_pagealign( int (*func)(), int align );
+#define x264_checkasm_warmup_avx x264_template(checkasm_warmup_avx)
 void x264_checkasm_warmup_avx( void );
+#define x264_checkasm_warmup_avx512 x264_template(checkasm_warmup_avx512)
 void x264_checkasm_warmup_avx512( void );
 
 /* detect when callee-saved regs aren't saved
@@ -247,13 +251,16 @@ intptr_t x264_checkasm_call( intptr_t (*func)(), int *ok, ... );
 #endif
 
 #if ARCH_ARM
+#define x264_checkasm_call_neon x264_template(checkasm_call_neon)
 intptr_t x264_checkasm_call_neon( intptr_t (*func)(), int *ok, ... );
+#define x264_checkasm_call_noneon x264_template(checkasm_call_noneon)
 intptr_t x264_checkasm_call_noneon( intptr_t (*func)(), int *ok, ... );
 intptr_t (*x264_checkasm_call)( intptr_t (*func)(), int *ok, ... ) = x264_checkasm_call_noneon;
 #endif
 
 #define call_c1(func,...) func(__VA_ARGS__)
 
+#define x264_checkasm_stack_clobber x264_template(checkasm_stack_clobber)
 #if ARCH_X86_64
 /* Evil hack: detect incorrect assumptions that 32-bit ints are zero-extended to 64-bit.
  * This is done by clobbering the stack with junk around the stack pointer and calling the
