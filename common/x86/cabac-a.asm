@@ -72,18 +72,18 @@ coeff_last_avx2_lzcnt: COEFF_LAST_TABLE mmx2_lzcnt, avx2_lzcnt, sse2_lzcnt, 16, 
 
 SECTION .text
 
-cextern cabac_range_lps
-cextern cabac_transition
-cextern cabac_renorm_shift
-cextern cabac_entropy
-cextern cabac_size_unary
-cextern cabac_transition_unary
-cextern significant_coeff_flag_offset
-cextern significant_coeff_flag_offset_8x8
-cextern last_coeff_flag_offset
-cextern last_coeff_flag_offset_8x8
-cextern coeff_abs_level_m1_offset
-cextern count_cat_m1
+cextern_classic cabac_range_lps
+cextern_classic cabac_transition
+cextern_classic cabac_renorm_shift
+cextern_classic cabac_entropy
+cextern_classic cabac_size_unary
+cextern_classic cabac_transition_unary
+cextern_classic significant_coeff_flag_offset
+cextern_classic significant_coeff_flag_offset_8x8
+cextern_classic last_coeff_flag_offset
+cextern_classic last_coeff_flag_offset_8x8
+cextern_classic coeff_abs_level_m1_offset
+cextern_classic count_cat_m1
 cextern cabac_encode_ue_bypass
 
 %if ARCH_X86_64
