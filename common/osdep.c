@@ -62,7 +62,7 @@ int64_t x264_mdate( void )
 /* state of the threading library being initialized */
 static volatile LONG x264_threading_is_init = 0;
 
-static void x264_threading_destroy( void )
+static void threading_destroy( void )
 {
 #if PTW32_STATIC_LIB
     pthread_win32_thread_detach_np();
@@ -88,7 +88,7 @@ int x264_threading_init( void )
         return -1;
 #endif
     /* register cleanup to run at process termination */
-    atexit( x264_threading_destroy );
+    atexit( threading_destroy );
 
     return 0;
 }

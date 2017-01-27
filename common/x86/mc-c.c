@@ -288,7 +288,7 @@ MC_WEIGHT_WTAB(weight,sse2,mmx2,sse2,12)
 MC_WEIGHT_WTAB(offsetadd,sse2,mmx2,sse2,16)
 MC_WEIGHT_WTAB(offsetsub,sse2,mmx2,sse2,16)
 
-static void x264_weight_cache_mmx2( x264_t *h, x264_weight_t *w )
+static void weight_cache_mmx2( x264_t *h, x264_weight_t *w )
 {
     if( w->i_scale == 1<<w->i_denom )
     {
@@ -320,7 +320,7 @@ MC_WEIGHT_WTAB(offsetsub,sse2,mmx2,mmx2,16)
 MC_WEIGHT_WTAB(weight,ssse3,ssse3,ssse3,16)
 MC_WEIGHT_WTAB(weight,avx2,ssse3,avx2,16)
 
-static void x264_weight_cache_mmx2( x264_t *h, x264_weight_t *w )
+static void weight_cache_mmx2( x264_t *h, x264_weight_t *w )
 {
     int i;
     int16_t den1;
@@ -343,7 +343,7 @@ static void x264_weight_cache_mmx2( x264_t *h, x264_weight_t *w )
     }
 }
 
-static void x264_weight_cache_ssse3( x264_t *h, x264_weight_t *w )
+static void weight_cache_ssse3( x264_t *h, x264_weight_t *w )
 {
     int i, den1;
     if( w->i_scale == 1<<w->i_denom )
@@ -586,7 +586,7 @@ void x264_mc_init_mmx( int cpu, x264_mc_functions_t *pf )
     pf->mc_chroma = x264_mc_chroma_mmx2;
     pf->hpel_filter = x264_hpel_filter_mmx2;
     pf->weight = x264_mc_weight_wtab_mmx2;
-    pf->weight_cache = x264_weight_cache_mmx2;
+    pf->weight_cache = weight_cache_mmx2;
     pf->offsetadd = x264_mc_offsetadd_wtab_mmx2;
     pf->offsetsub = x264_mc_offsetsub_wtab_mmx2;
 
@@ -802,7 +802,7 @@ void x264_mc_init_mmx( int cpu, x264_mc_functions_t *pf )
         }
     }
 
-    pf->weight_cache = x264_weight_cache_ssse3;
+    pf->weight_cache = weight_cache_ssse3;
     pf->weight = x264_mc_weight_wtab_ssse3;
 
     if( !(cpu&(X264_CPU_SLOW_SHUFFLE|X264_CPU_SLOW_ATOM|X264_CPU_SLOW_PALIGNR)) )

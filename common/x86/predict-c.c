@@ -281,7 +281,7 @@ PREDICT_8x8C_P_INLINE( avx, avx )
 PREDICT_8x8C_P_INLINE( avx2, avx2 )
 
 #if ARCH_X86_64 && !HIGH_BIT_DEPTH
-static void x264_predict_8x8c_dc_left( uint8_t *src )
+static void predict_8x8c_dc_left( uint8_t *src )
 {
     int y;
     uint32_t s0 = 0, s1 = 0;
@@ -397,7 +397,7 @@ void x264_predict_8x8c_init_mmx( int cpu, x264_predict_t pf[7] )
     pf[I_PRED_CHROMA_H]   = x264_predict_8x8c_h_avx2;
 #else
 #if ARCH_X86_64
-    pf[I_PRED_CHROMA_DC_LEFT] = x264_predict_8x8c_dc_left;
+    pf[I_PRED_CHROMA_DC_LEFT] = predict_8x8c_dc_left;
 #endif
     pf[I_PRED_CHROMA_V]       = x264_predict_8x8c_v_mmx;
     if( !(cpu&X264_CPU_MMX2) )

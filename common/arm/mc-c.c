@@ -113,7 +113,7 @@ void x264_mbtree_fix8_pack_neon( uint16_t *dst, float *src, int count );
 void x264_mbtree_fix8_unpack_neon( float *dst, uint16_t *src, int count );
 
 #if !HIGH_BIT_DEPTH
-static void x264_weight_cache_neon( x264_t *h, x264_weight_t *w )
+static void weight_cache_neon( x264_t *h, x264_weight_t *w )
 {
     if( w->i_scale == 1<<w->i_denom )
     {
@@ -283,7 +283,7 @@ void x264_mc_init_arm( int cpu, x264_mc_functions_t *pf )
     pf->weight    = x264_mc_wtab_neon;
     pf->offsetadd = x264_mc_offsetadd_wtab_neon;
     pf->offsetsub = x264_mc_offsetsub_wtab_neon;
-    pf->weight_cache = x264_weight_cache_neon;
+    pf->weight_cache = weight_cache_neon;
 
     pf->mc_chroma = x264_mc_chroma_neon;
     pf->mc_luma = mc_luma_neon;

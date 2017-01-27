@@ -39,7 +39,7 @@ const int x264_bit_depth = BIT_DEPTH;
 
 const int x264_chroma_format = X264_CHROMA_FORMAT;
 
-static void x264_log_default( void *, int, const char *, va_list );
+static void log_default( void *, int, const char *, va_list );
 
 /****************************************************************************
  * x264_param_default:
@@ -123,7 +123,7 @@ void x264_param_default( x264_param_t *param )
     param->rc.b_mb_tree = 1;
 
     /* Log */
-    param->pf_log = x264_log_default;
+    param->pf_log = log_default;
     param->p_log_private = NULL;
     param->i_log_level = X264_LOG_INFO;
 
@@ -179,7 +179,7 @@ void x264_param_default( x264_param_t *param )
     param->psz_clbin_file = NULL;
 }
 
-static int x264_param_apply_preset( x264_param_t *param, const char *preset )
+static int param_apply_preset( x264_param_t *param, const char *preset )
 {
     char *end;
     int i = strtol( preset, &end, 10 );
@@ -301,7 +301,7 @@ static int x264_param_apply_preset( x264_param_t *param, const char *preset )
     return 0;
 }
 
-static int x264_param_apply_tune( x264_param_t *param, const char *tune )
+static int param_apply_tune( x264_param_t *param, const char *tune )
 {
     char *tmp = x264_malloc( strlen( tune ) + 1 );
     if( !tmp )
@@ -411,9 +411,9 @@ int x264_param_default_preset( x264_param_t *param, const char *preset, const ch
 {
     x264_param_default( param );
 
-    if( preset && x264_param_apply_preset( param, preset ) < 0 )
+    if( preset && param_apply_preset( param, preset ) < 0 )
         return -1;
-    if( tune && x264_param_apply_tune( param, tune ) < 0 )
+    if( tune && param_apply_tune( param, tune ) < 0 )
         return -1;
     return 0;
 }
@@ -534,7 +534,7 @@ static int parse_cqm( const char *str, uint8_t *cqm, int length )
     return (i == length) ? 0 : -1;
 }
 
-static int x264_atobool( const char *str, int *b_error )
+static int atobool_internal( const char *str, int *b_error )
 {
     if( !strcmp(str, "1") ||
         !strcasecmp(str, "true") ||
@@ -548,7 +548,7 @@ static int x264_atobool( const char *str, int *b_error )
     return 0;
 }
 
-static int x264_atoi( const char *str, int *b_error )
+static int atoi_internal( const char *str, int *b_error )
 {
     char *end;
     int v = strtol( str, &end, 0 );
@@ -557,7 +557,7 @@ static int x264_atoi( const char *str, int *b_error )
     return v;
 }
 
-static double x264_atof( const char *str, int *b_error )
+static double atof_internal( const char *str, int *b_error )
 {
     char *end;
     double v = strtod( str, &end );
@@ -566,11 +566,11 @@ static double x264_atof( const char *str, int *b_error )
     return v;
 }
 
-#define atobool(str) ( name_was_bool = 1, x264_atobool( str, &b_error ) )
+#define atobool(str) ( name_was_bool = 1, atobool_internal( str, &b_error ) )
 #undef atoi
 #undef atof
-#define atoi(str) x264_atoi( str, &b_error )
-#define atof(str) x264_atof( str, &b_error )
+#define atoi(str) atoi_internal( str, &b_error )
+#define atof(str) atof_internal( str, &b_error )
 
 int x264_param_parse( x264_param_t *p, const char *name, const char *value )
 {
@@ -1079,14 +1079,14 @@ void x264_log( x264_t *h, int i_level, const char *psz_fmt, ... )
         va_list arg;
         va_start( arg, psz_fmt );
         if( !h )
-            x264_log_default( NULL, i_level, psz_fmt, arg );
+            log_default( NULL, i_level, psz_fmt, arg );
         else
             h->param.pf_log( h->param.p_log_private, i_level, psz_fmt, arg );
         va_end( arg );
     }
 }
 
-static void x264_log_default( void *p_unused, int i_level, const char *psz_fmt, va_list arg )
+static void log_default( void *p_unused, int i_level, const char *psz_fmt, va_list arg )
 {
     char *psz_prefix;
     switch( i_level )

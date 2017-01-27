@@ -365,7 +365,7 @@ static int x264_pixel_sa8d_8x8( pixel *pix1, intptr_t i_pix1, pixel *pix2, intpt
     return (sum+2)>>2;
 }
 
-static int x264_pixel_sa8d_16x16( pixel *pix1, intptr_t i_pix1, pixel *pix2, intptr_t i_pix2 )
+static int pixel_sa8d_16x16( pixel *pix1, intptr_t i_pix1, pixel *pix2, intptr_t i_pix2 )
 {
     int sum = sa8d_8x8( pix1, i_pix1, pix2, i_pix2 )
             + sa8d_8x8( pix1+8, i_pix1, pix2+8, i_pix2 )
@@ -845,7 +845,7 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
     INIT4( hadamard_ac, );
     INIT_ADS( );
 
-    pixf->sa8d[PIXEL_16x16] = x264_pixel_sa8d_16x16;
+    pixf->sa8d[PIXEL_16x16] = pixel_sa8d_16x16;
     pixf->sa8d[PIXEL_8x8]   = x264_pixel_sa8d_8x8;
     pixf->var[PIXEL_16x16] = x264_pixel_var_16x16;
     pixf->var[PIXEL_8x16]  = x264_pixel_var_8x16;

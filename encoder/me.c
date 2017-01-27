@@ -1024,7 +1024,7 @@ static void refine_subpel( x264_t *h, x264_me_t *m, int hpel_iters, int qpel_ite
  * other than making its iteration count not a compile-time constant. */
 int x264_iter_kludge = 0;
 
-static void ALWAYS_INLINE x264_me_refine_bidir( x264_t *h, x264_me_t *m0, x264_me_t *m1, int i_weight, int i8, int i_lambda2, int rd )
+static void ALWAYS_INLINE me_refine_bidir( x264_t *h, x264_me_t *m0, x264_me_t *m1, int i_weight, int i8, int i_lambda2, int rd )
 {
     int x = i8&1;
     int y = i8>>1;
@@ -1179,7 +1179,7 @@ static void ALWAYS_INLINE x264_me_refine_bidir( x264_t *h, x264_me_t *m0, x264_m
 
 void x264_me_refine_bidir_satd( x264_t *h, x264_me_t *m0, x264_me_t *m1, int i_weight )
 {
-    x264_me_refine_bidir( h, m0, m1, i_weight, 0, 0, 0 );
+    me_refine_bidir( h, m0, m1, i_weight, 0, 0, 0 );
 }
 
 void x264_me_refine_bidir_rd( x264_t *h, x264_me_t *m0, x264_me_t *m1, int i_weight, int i8, int i_lambda2 )
@@ -1187,7 +1187,7 @@ void x264_me_refine_bidir_rd( x264_t *h, x264_me_t *m0, x264_me_t *m1, int i_wei
     /* Motion compensation is done as part of bidir_rd; don't repeat
      * it in encoding. */
     h->mb.b_skip_mc = 1;
-    x264_me_refine_bidir( h, m0, m1, i_weight, i8, i_lambda2, 1 );
+    me_refine_bidir( h, m0, m1, i_weight, i8, i_lambda2, 1 );
     h->mb.b_skip_mc = 0;
 }
 
