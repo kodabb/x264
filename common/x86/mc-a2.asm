@@ -1045,7 +1045,7 @@ PLANE_COPY_CORE 1
 %endmacro
 
 %macro DEINTERLEAVE 6 ; dstu, dstv, src, dstv==dstu+8, shuffle constant, is aligned
-    mova     m0, [%3]
+    mov%6    m0, [%3]
 %if mmsize == 32
     pshufb   m0, %5
     vpermq   m0, m0, q3120
@@ -1181,8 +1181,8 @@ cglobal store_interleave_chroma, 5,5
 
 %macro PLANE_DEINTERLEAVE 0
 ;-----------------------------------------------------------------------------
-; void plane_copy_deinterleave( pixel *dstu, intptr_t i_dstu,
-;                               pixel *dstv, intptr_t i_dstv,
+; void plane_copy_deinterleave( pixel *dsta, intptr_t i_dsta,
+;                               pixel *dstb, intptr_t i_dstb,
 ;                               pixel *src,  intptr_t i_src, int w, int h )
 ;-----------------------------------------------------------------------------
 %if ARCH_X86_64
