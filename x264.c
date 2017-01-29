@@ -420,47 +420,44 @@ static char *stringify_names( char *buf, const char * const names[] )
     return buf;
 }
 
+#define INDENT "                                "
+
+static void print_csp_name_internal( const char *name, size_t *line_len, int last )
+{
+    if( name )
+    {
+        size_t name_len = strlen( name );
+        if( *line_len + name_len > (80 - strlen( ", " )) )
+        {
+            printf( "\n" INDENT );
+            *line_len = strlen( INDENT );
+        }
+        printf( "%s", name );
+        *line_len += name_len;
+        if( !last )
+        {
+            printf( ", " );
+            *line_len += 2;
+        }
+    }
+}
+
 static void print_csp_names( int longhelp )
 {
     if( longhelp < 2 )
         return;
-#   define INDENT "                                "
     printf( "                              - valid csps for `raw' demuxer:\n" );
     printf( INDENT );
+    size_t line_len = strlen( INDENT );
     for( int i = X264_CSP_NONE+1; i < X264_CSP_CLI_MAX; i++ )
-    {
-        if( x264_cli_csps[i].name )
-        {
-            printf( "%s", x264_cli_csps[i].name );
-            if( i+1 < X264_CSP_CLI_MAX )
-                printf( ", " );
-        }
-    }
+        print_csp_name_internal( x264_cli_csps[i].name, &line_len, i == X264_CSP_CLI_MAX-1 );
 #if HAVE_LAVF
     printf( "\n" );
     printf( "                              - valid csps for `lavf' demuxer:\n" );
     printf( INDENT );
-    size_t line_len = strlen( INDENT );
+    line_len = strlen( INDENT );
     for( enum AVPixelFormat i = AV_PIX_FMT_NONE+1; i < AV_PIX_FMT_NB; i++ )
-    {
-        const char *pfname = av_get_pix_fmt_name( i );
-        if( pfname )
-        {
-            size_t name_len = strlen( pfname );
-            if( line_len + name_len > (80 - strlen( ", " )) )
-            {
-                printf( "\n" INDENT );
-                line_len = strlen( INDENT );
-            }
-            printf( "%s", pfname );
-            line_len += name_len;
-            if( i+1 < AV_PIX_FMT_NB )
-            {
-                printf( ", " );
-                line_len += 2;
-            }
-        }
-    }
+        print_csp_name_internal( av_get_pix_fmt_name( i ), &line_len, i == AV_PIX_FMT_NB-1 );
 #endif
     printf( "\n" );
 }
