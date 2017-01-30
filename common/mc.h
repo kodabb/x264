@@ -34,6 +34,7 @@ do\
     MC_CLIP_ADD((s)[1], (x)[1]);\
 } while( 0 )
 
+#define x264_mbtree_propagate_list_internal_neon x264_template(mbtree_propagate_list_internal_neon)
 #define PROPAGATE_LIST(cpu)\
 void x264_mbtree_propagate_list_internal_##cpu( int16_t (*mvs)[2], int16_t *propagate_amount,\
                                                 uint16_t *lowres_costs, int16_t *output,\

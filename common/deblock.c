@@ -763,20 +763,33 @@ void x264_deblock_h_luma_altivec( uint8_t *pix, intptr_t stride, int alpha, int 
 #endif // ARCH_PPC
 
 #if HAVE_ARMV6 || ARCH_AARCH64
+#define x264_deblock_v_luma_neon x264_template(deblock_v_luma_neon)
 void x264_deblock_v_luma_neon  ( uint8_t *pix, intptr_t stride, int alpha, int beta, int8_t *tc0 );
+#define x264_deblock_h_luma_neon x264_template(deblock_h_luma_neon)
 void x264_deblock_h_luma_neon  ( uint8_t *pix, intptr_t stride, int alpha, int beta, int8_t *tc0 );
+#define x264_deblock_v_chroma_neon x264_template(deblock_v_chroma_neon)
 void x264_deblock_v_chroma_neon( uint8_t *pix, intptr_t stride, int alpha, int beta, int8_t *tc0 );
+#define x264_deblock_h_chroma_neon x264_template(deblock_h_chroma_neon)
 void x264_deblock_h_chroma_neon( uint8_t *pix, intptr_t stride, int alpha, int beta, int8_t *tc0 );
+#define x264_deblock_strength_neon x264_template(deblock_strength_neon)
 void x264_deblock_strength_neon( uint8_t nnz[X264_SCAN8_SIZE], int8_t ref[2][X264_SCAN8_LUMA_SIZE],
                                  int16_t mv[2][X264_SCAN8_LUMA_SIZE][2], uint8_t bs[2][8][4],
                                  int mvy_limit, int bframe );
+#define x264_deblock_h_chroma_422_neon x264_template(deblock_h_chroma_422_neon)
 void x264_deblock_h_chroma_422_neon( uint8_t *pix, intptr_t stride, int alpha, int beta, int8_t *tc0 );
+#define x264_deblock_h_chroma_mbaff_neon x264_template(deblock_h_chroma_mbaff_neon)
 void x264_deblock_h_chroma_mbaff_neon( uint8_t *pix, intptr_t stride, int alpha, int beta, int8_t *tc0 );
+#define x264_deblock_h_chroma_intra_mbaff_neon x264_template(deblock_h_chroma_intra_mbaff_neon)
 void x264_deblock_h_chroma_intra_mbaff_neon( uint8_t *pix, intptr_t stride, int alpha, int beta );
+#define x264_deblock_h_chroma_intra_neon x264_template(deblock_h_chroma_intra_neon)
 void x264_deblock_h_chroma_intra_neon( uint8_t *pix, intptr_t stride, int alpha, int beta );
+#define x264_deblock_h_chroma_422_intra_neon x264_template(deblock_h_chroma_422_intra_neon)
 void x264_deblock_h_chroma_422_intra_neon( uint8_t *pix, intptr_t stride, int alpha, int beta );
+#define x264_deblock_v_chroma_intra_neon x264_template(deblock_v_chroma_intra_neon)
 void x264_deblock_v_chroma_intra_neon( uint8_t *pix, intptr_t stride, int alpha, int beta );
+#define x264_deblock_h_luma_intra_neon x264_template(deblock_h_luma_intra_neon)
 void x264_deblock_h_luma_intra_neon( uint8_t *pix, intptr_t stride, int alpha, int beta );
+#define x264_deblock_v_luma_intra_neon x264_template(deblock_v_luma_intra_neon)
 void x264_deblock_v_luma_intra_neon( uint8_t *pix, intptr_t stride, int alpha, int beta );
 #endif
 
