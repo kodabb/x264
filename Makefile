@@ -13,13 +13,14 @@ GENERATED =
 all: default
 default:
 
+SRCSCOMMON = common/api.c common/cpu.c common/log.c common/mem.c common/picture.c \
+             common/mathematics.c common/param.c common/tables.c common/osdep.c
+
 SRCS = common/mc.c common/predict.c common/pixel.c common/macroblock.c \
-       common/frame.c common/dct.c common/cpu.c common/cabac.c \
-       common/common.c common/osdep.c common/rectangle.c \
+       common/frame.c common/dct.c common/cabac.c \
+       common/common.c common/rectangle.c \
        common/set.c common/quant.c common/deblock.c common/vlc.c \
        common/mvpred.c common/bitstream.c \
-       common/log.c common/mem.c common/picture.c common/mathematics.c \
-       common/param.c common/tables.c common/api.c \
        encoder/analyse.c encoder/me.c encoder/ratecontrol.c \
        encoder/set.c encoder/macroblock.c encoder/cabac.c \
        encoder/cavlc.c encoder/encoder.c encoder/lookahead.c
@@ -32,6 +33,8 @@ SRCCLI = x264.c input/input.c input/timecode.c input/raw.c input/y4m.c \
          filters/video/select_every.c filters/video/crop.c filters/video/depth.c
 
 SRCSO =
+SRCSOCL =
+
 OBJS =
 OBJSO =
 OBJCLI =
@@ -81,12 +84,10 @@ endif
 ifneq ($(AS),)
 X86SRC0 = const-a.asm cabac-a.asm dct-a.asm deblock-a.asm mc-a.asm \
           mc-a2.asm pixel-a.asm predict-a.asm quant-a.asm \
-          cpu-a.asm dct-32.asm bitstream-a.asm
-ifneq ($(findstring HIGH_BIT_DEPTH, $(CONFIG)),)
-X86SRC0 += sad16-a.asm
-else
-X86SRC0 += sad-a.asm
-endif
+          dct-32.asm bitstream-a.asm
+ASMSRCCOMMON = common/x86/cpu-a.asm
+ASMSRC8 = common/x86/sad-a.asm
+ASMSRC10 = common/x86/sad16-a.asm
 X86SRC = $(X86SRC0:%=common/x86/%)
 
 ifeq ($(SYS_ARCH),X86)
@@ -101,7 +102,11 @@ endif
 
 ifdef ARCH_X86
 SRCS   += common/x86/mc-c.c common/x86/predict-c.c
-OBJASM  = $(ASMSRC:%.asm=%.o)
+
+OBJASM += $(ASMSRCCOMMON:%.asm=%.o)
+OBJASM += $(ASMSRC:%.asm=%-8.o) $(ASMSRC8:%.asm=%-8.o)
+OBJASM += $(ASMSRC:%.asm=%-10.o) $(ASMSRC10:%.asm=%-10.o)
+
 $(OBJASM): common/x86/x86inc.asm common/x86/x86util.asm
 OBJCHK += tools/checkasm-a.o
 endif
@@ -123,7 +128,10 @@ ASMSRC += common/arm/cpu-a.S common/arm/pixel-a.S common/arm/mc-a.S \
           common/arm/dct-a.S common/arm/quant-a.S common/arm/deblock-a.S \
           common/arm/predict-a.S common/arm/bitstream-a.S
 SRCS   += common/arm/mc-c.c common/arm/predict-c.c
-OBJASM  = $(ASMSRC:%.S=%.o)
+
+OBJASM += $(ASMSRC:%.S=%-8.o)
+OBJASM += $(ASMSRC:%.S=%-10.o)
+
 OBJCHK += tools/checkasm-arm.o
 endif
 endif
@@ -142,7 +150,10 @@ ASMSRC += common/aarch64/bitstream-a.S \
 SRCS   += common/aarch64/asm-offsets.c \
           common/aarch64/mc-c.c        \
           common/aarch64/predict-c.c
-OBJASM  = $(ASMSRC:%.S=%.o)
+
+OBJASM += $(ASMSRC:%.S=%-8.o)
+OBJASM += $(ASMSRC:%.S=%-10.o)
+
 OBJCHK += tools/checkasm-aarch64.o
 endif
 endif
@@ -172,12 +183,15 @@ ifeq ($(HAVE_OPENCL),yes)
 common/oclobj.h: common/opencl/x264-cl.h $(wildcard $(SRCPATH)/common/opencl/*.cl)
 	cat $^ | $(SRCPATH)/tools/cltostr.sh $@
 GENERATED += common/oclobj.h
-SRCS += common/opencl.c encoder/slicetype-cl.c
+SRCSOCL += common/opencl.c encoder/slicetype-cl.c
 endif
 
-OBJS   += $(SRCS:%.c=%.o)
+OBJS   += $(SRCSCOMMON:%.c=%.o)
 OBJCLI += $(SRCCLI:%.c=%.o)
 OBJSO  += $(SRCSO:%.c=%.o)
+
+OBJS += $(SRCS:%.c=%-8.o) $(SRCSOCL:%.c=%-8.o)
+OBJS += $(SRCS:%.c=%-10.o)
 
 .PHONY: all default fprofiled clean distclean install install-* uninstall cli lib-* etags
 
@@ -211,12 +225,34 @@ example$(EXE): $(GENERATED) .depend $(OBJEXAMPLE) $(LIBX264)
 
 $(OBJS) $(OBJASM) $(OBJSO) $(OBJCLI) $(OBJCHK) $(OBJEXAMPLE): .depend
 
+%-8.o: %.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@ -DHIGH_BIT_DEPTH=0 -DBIT_DEPTH=8
+
+%-10.o: %.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@ -DHIGH_BIT_DEPTH=1 -DBIT_DEPTH=10
+
 %.o: %.asm common/x86/x86inc.asm common/x86/x86util.asm
 	$(AS) $(ASFLAGS) -o $@ $<
 	-@ $(if $(STRIP), $(STRIP) -x $@) # delete local/anonymous symbols, so they don't show up in oprofile
 
+%-8.o: %.asm common/x86/x86inc.asm common/x86/x86util.asm
+	$(AS) $(ASFLAGS) -o $@ $< -DHIGH_BIT_DEPTH=0 -DBIT_DEPTH=8 -Dprivate_prefix=x264_8
+	-@ $(if $(STRIP), $(STRIP) -x $@) # delete local/anonymous symbols, so they don't show up in oprofile
+
+%-10.o: %.asm common/x86/x86inc.asm common/x86/x86util.asm
+	$(AS) $(ASFLAGS) -o $@ $< -DHIGH_BIT_DEPTH=1 -DBIT_DEPTH=10 -Dprivate_prefix=x264_10
+	-@ $(if $(STRIP), $(STRIP) -x $@) # delete local/anonymous symbols, so they don't show up in oprofile
+
 %.o: %.S
 	$(AS) $(ASFLAGS) -o $@ $<
+	-@ $(if $(STRIP), $(STRIP) -x $@) # delete local/anonymous symbols, so they don't show up in oprofile
+
+%-8.o: %.S
+	$(AS) $(ASFLAGS) -o $@ $< -DHIGH_BIT_DEPTH=0 -DBIT_DEPTH=8
+	-@ $(if $(STRIP), $(STRIP) -x $@) # delete local/anonymous symbols, so they don't show up in oprofile
+
+%-10.o: %.S
+	$(AS) $(ASFLAGS) -o $@ $< -DHIGH_BIT_DEPTH=1 -DBIT_DEPTH=10
 	-@ $(if $(STRIP), $(STRIP) -x $@) # delete local/anonymous symbols, so they don't show up in oprofile
 
 %.dll.o: %.rc x264.h
@@ -242,7 +278,7 @@ ifneq ($(wildcard .depend),)
 include .depend
 endif
 
-SRC2 = $(SRCS) $(SRCCLI)
+SRC2 = $(SRCS) $(SRCCLI) $(SRCSCOMMON) $(SRCSOCL)
 # These should cover most of the important codepaths
 OPT0 = --crf 30 -b1 -m1 -r1 --me dia --no-cabac --direct temporal --ssim --no-weightb
 OPT1 = --crf 16 -b2 -m3 -r3 --me hex --no-8x8dct --direct spatial --no-dct-decimate -t0  --slice-max-mbs 50
