@@ -339,7 +339,7 @@ static void print_version_info( void )
 #else
     printf( "using an unknown compiler\n" );
 #endif
-    printf( "x264 configuration: --bit-depth=%d --chroma-format=%s\n", X264_BIT_DEPTH, chroma_format_names[X264_CHROMA_FORMAT] );
+    printf( "x264 configuration: --chroma-format=%s\n", chroma_format_names[X264_CHROMA_FORMAT] );
     printf( "libx264 configuration: --chroma-format=%s\n", chroma_format_names[x264_chroma_format] );
     printf( "x264 license: " );
 #if HAVE_GPL
@@ -488,7 +488,7 @@ static void help( x264_param_t *defaults, int longhelp )
         " .mkv -> Matroska\n"
         " .flv -> Flash Video\n"
         " .mp4 -> MP4 if compiled with GPAC or L-SMASH support (%s)\n"
-        "Output bit depth: %d (configured at compile time)\n"
+        "Output bit depth: %s%s%s\n"
         "\n"
         "Options:\n"
         "\n"
@@ -519,7 +519,13 @@ static void help( x264_param_t *defaults, int longhelp )
 #else
         "no",
 #endif
-        X264_BIT_DEPTH
+#if HAVE_BITDEPTH8
+        "8 ",
+#endif
+#if HAVE_BITDEPTH10
+        "10",
+#endif
+        "."
       );
     H0( "Example usage:\n" );
     H0( "\n" );
@@ -1634,7 +1640,17 @@ generic_option:
 
     /* init threaded input while the information about the input video is unaltered by filtering */
 #if HAVE_THREAD
-    cli_input_t thread_input = param->i_bitdepth == 8 ? thread_8_input : thread_10_input;
+    cli_input_t thread_input;
+    if (param->i_bitdepth == 8) {
+#if HAVE_BITDEPTH8
+        thread_input = thread_8_input;
+#endif
+    } else {
+#if HAVE_BITDEPTH10
+        thread_input = thread_10_input;
+#endif
+    }
+
     if( info.thread_safe && (b_thread_input || param->i_threads > 1
         || (param->i_threads == X264_THREADS_AUTO && x264_cpu_num_processors() > 1)) )
     {

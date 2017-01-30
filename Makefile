@@ -106,8 +106,12 @@ ifdef ARCH_X86
 SRCS   += common/x86/mc-c.c common/x86/predict-c.c
 
 OBJASM += $(ASMSRCCOMMON:%.asm=%.o)
+ifneq ($(findstring HAVE_BITDEPTH8, $(CONFIG)),)
 OBJASM += $(ASMSRC:%.asm=8bit/%.o) $(ASMSRC8:%.asm=8bit/%.o)
+endif
+ifneq ($(findstring HAVE_BITDEPTH10, $(CONFIG)),)
 OBJASM += $(ASMSRC:%.asm=10bit/%.o) $(ASMSRC10:%.asm=10bit/%.o)
+endif
 
 $(OBJASM): common/x86/x86inc.asm common/x86/x86util.asm
 OBJCHK += tools/checkasm-a.o
@@ -131,8 +135,12 @@ ASMSRC += common/arm/cpu-a.S common/arm/pixel-a.S common/arm/mc-a.S \
           common/arm/predict-a.S common/arm/bitstream-a.S
 SRCS   += common/arm/mc-c.c common/arm/predict-c.c
 
+ifneq ($(findstring HAVE_BITDEPTH8, $(CONFIG)),)
 OBJASM += $(ASMSRC:%.S=8bit/%.o)
+endif
+ifneq ($(findstring HAVE_BITDEPTH10, $(CONFIG)),)
 OBJASM += $(ASMSRC:%.S=10bit/%.o)
+endif
 
 OBJCHK += tools/checkasm-arm.o
 endif
@@ -153,8 +161,12 @@ SRCS   += common/aarch64/asm-offsets.c \
           common/aarch64/mc-c.c        \
           common/aarch64/predict-c.c
 
+ifneq ($(findstring HAVE_BITDEPTH8, $(CONFIG)),)
 OBJASM += $(ASMSRC:%.S=8bit/%.o)
+endif
+ifneq ($(findstring HAVE_BITDEPTH10, $(CONFIG)),)
 OBJASM += $(ASMSRC:%.S=10bit/%.o)
+endif
 
 OBJCHK += tools/checkasm-aarch64.o
 endif
@@ -192,10 +204,14 @@ OBJS   += $(SRCSCOMMON:%.c=%.o)
 OBJCLI += $(SRCCLI:%.c=%.o)
 OBJSO  += $(SRCSO:%.c=%.o)
 
+ifneq ($(findstring HAVE_BITDEPTH8, $(CONFIG)),)
 OBJS += $(SRCS:%.c=8bit/%.o) $(SRCSOCL:%.c=8bit/%.o)
 OBJCLI += $(SRCCLIBD:%.c=8bit/%.o)
+endif
+ifneq ($(findstring HAVE_BITDEPTH10, $(CONFIG)),)
 OBJS += $(SRCS:%.c=10bit/%.o)
 OBJCLI += $(SRCCLIBD:%.c=10bit/%.o)
+endif
 
 .PHONY: all default fprofiled clean distclean install install-* uninstall cli lib-* etags
 

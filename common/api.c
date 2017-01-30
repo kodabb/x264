@@ -29,6 +29,7 @@
 
 #include "x264.h"
 #include "log.h"
+#include "config.h"
 
 /****************************************************************************
  * global symbols
@@ -84,6 +85,7 @@ x264_t *x264_encoder_open( x264_param_t *param )
         return NULL;
 
     if( param->i_bitdepth == 8 ) {
+#if HAVE_BITDEPTH8
         api->encoder_reconfig = x264_8_encoder_reconfig;
         api->encoder_parameters = x264_8_encoder_parameters;
         api->encoder_headers = x264_8_encoder_headers;
@@ -95,7 +97,11 @@ x264_t *x264_encoder_open( x264_param_t *param )
         api->encoder_invalidate_reference = x264_8_encoder_invalidate_reference;
 
         api->x264 = x264_8_encoder_open( param );
+#else
+        x264_log_internal( NULL, "Not compiled with 8 bit support\n" );
+#endif
     } else if( param->i_bitdepth == 10 ) {
+#if HAVE_BITDEPTH10
         api->encoder_reconfig = x264_10_encoder_reconfig;
         api->encoder_parameters = x264_10_encoder_parameters;
         api->encoder_headers = x264_10_encoder_headers;
@@ -107,6 +113,9 @@ x264_t *x264_encoder_open( x264_param_t *param )
         api->encoder_invalidate_reference = x264_10_encoder_invalidate_reference;
 
         api->x264 = x264_10_encoder_open( param );
+#else
+        x264_log_internal( NULL, "Not compiled with 10 bit support\n");
+#endif
     }
 
     if( !api->x264 ) {
