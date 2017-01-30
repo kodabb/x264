@@ -68,6 +68,7 @@ void x264_cabac_block_residual_internal_sse2      ( dctcoef *l, int b_interlaced
 void x264_cabac_block_residual_internal_sse2_lzcnt( dctcoef *l, int b_interlaced, intptr_t ctx_block_cat, x264_cabac_t *cb );
 void x264_cabac_block_residual_internal_avx2_bmi2 ( dctcoef *l, int b_interlaced, intptr_t ctx_block_cat, x264_cabac_t *cb );
 
+#define x264_nal_escape_neon x264_template(nal_escape_neon)
 uint8_t *x264_nal_escape_neon( uint8_t *dst, uint8_t *src, uint8_t *end );
 
 /****************************************************************************

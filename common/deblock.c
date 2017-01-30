@@ -762,6 +762,19 @@ void x264_deblock_h_luma_altivec( uint8_t *pix, intptr_t stride, int alpha, int 
 #endif // ARCH_PPC
 
 #if HAVE_ARMV6 || ARCH_AARCH64
+#define x264_deblock_h_chroma_422_intra_neon x264_template(deblock_h_chroma_422_intra_neon)
+#define x264_deblock_h_chroma_422_neon x264_template(deblock_h_chroma_422_neon)
+#define x264_deblock_h_chroma_intra_mbaff_neon x264_template(deblock_h_chroma_intra_mbaff_neon)
+#define x264_deblock_h_chroma_intra_neon x264_template(deblock_h_chroma_intra_neon)
+#define x264_deblock_h_chroma_mbaff_neon x264_template(deblock_h_chroma_mbaff_neon)
+#define x264_deblock_h_chroma_neon x264_template(deblock_h_chroma_neon)
+#define x264_deblock_h_luma_intra_neon x264_template(deblock_h_luma_intra_neon)
+#define x264_deblock_h_luma_neon x264_template(deblock_h_luma_neon)
+#define x264_deblock_strength_neon x264_template(deblock_strength_neon)
+#define x264_deblock_v_chroma_intra_neon x264_template(deblock_v_chroma_intra_neon)
+#define x264_deblock_v_chroma_neon x264_template(deblock_v_chroma_neon)
+#define x264_deblock_v_luma_intra_neon x264_template(deblock_v_luma_intra_neon)
+#define x264_deblock_v_luma_neon x264_template(deblock_v_luma_neon)
 void x264_deblock_v_luma_neon  ( uint8_t *pix, intptr_t stride, int alpha, int beta, int8_t *tc0 );
 void x264_deblock_h_luma_neon  ( uint8_t *pix, intptr_t stride, int alpha, int beta, int8_t *tc0 );
 void x264_deblock_v_chroma_neon( uint8_t *pix, intptr_t stride, int alpha, int beta, int8_t *tc0 );
