@@ -46,10 +46,14 @@ void x264_register_vid_filters( void )
 {
     extern cli_vid_filter_t source_filter;
     first_filter = &source_filter;
+#if HAVE_BITDEPTH8
     REGISTER_VFILTER( cache_8 );
     REGISTER_VFILTER( depth_8 );
+#endif
+#if HAVE_BITDEPTH10
     REGISTER_VFILTER( cache_10 );
     REGISTER_VFILTER( depth_10 );
+#endif
     REGISTER_VFILTER( crop );
     REGISTER_VFILTER( fix_vfr_pts );
     REGISTER_VFILTER( resize );

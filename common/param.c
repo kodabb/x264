@@ -67,7 +67,12 @@ void x264_param_default( x264_param_t *param )
     param->i_slice_max_size = 0;
     param->i_slice_max_mbs = 0;
     param->i_slice_count = 0;
+#if HAVE_BITDEPTH10
+    param->i_bitdepth = 10;
+#endif
+#if HAVE_BITDEPTH8
     param->i_bitdepth = 8;
+#endif
 
     /* Encoder parameters */
     param->i_frame_reference = 3;

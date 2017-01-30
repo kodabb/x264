@@ -30,7 +30,7 @@ Configuration options:
   --disable-thread         disable multithreaded encoding
   --disable-win32thread    disable win32threads (windows only)
   --disable-interlaced     disable interlaced encoding support
-  --bit-depth=BIT_DEPTH    set output bit depth (8-10) [8]
+  --bit-depth=BIT_DEPTH    set output bit depth (8 or 10) [auto]
   --chroma-format=FORMAT   output chroma format (420, 422, 444, all) [all]
 
 Advanced options:
@@ -352,7 +352,7 @@ debug="no"
 gprof="no"
 strip="no"
 pic="no"
-bit_depth="8"
+bit_depth=0
 chroma_format="all"
 compiler="GNU"
 compiler_style="GNU"
@@ -490,8 +490,8 @@ for opt do
             ;;
         --bit-depth=*)
             bit_depth="$optarg"
-            if [ "$bit_depth" -lt "8" -o "$bit_depth" -gt "10" ]; then
-                echo "Supplied bit depth must be in range [8,10]."
+            if [ "$bit_depth" -ne "0" -a "$bit_depth" -ne "8" -a "$bit_depth" -ne "10" ]; then
+                echo "Supplied bit depth must be 8 or 10."
                 exit 1
             fi
             bit_depth=`expr $bit_depth + 0`
@@ -1262,7 +1262,14 @@ if [ $compiler = ICC -o $compiler = ICL ] ; then
     fi
 fi
 
-if [ "$bit_depth" -gt "8" ]; then
+if [ "$bit_depth" -eq "0" ]; then
+    define HAVE_BITDEPTH8
+    define HAVE_BITDEPTH10
+    bit_depth="8 and 10"
+elif [ "$bit_depth" -eq "8" ]; then
+    define HAVE_BITDEPTH8
+elif [ "$bit_depth" -eq "10" ]; then
+    define HAVE_BITDEPTH10
     opencl="no"
 fi
 
@@ -1299,7 +1306,6 @@ done
 config_chroma_format="X264_CSP_I$chroma_format"
 [ "$config_chroma_format" == "X264_CSP_Iall" ] && config_chroma_format="0"
 cat > x264_config.h << EOF
-#define X264_BIT_DEPTH     $bit_depth
 #define X264_GPL           $x264_gpl
 #define X264_INTERLACED    $x264_interlaced
 #define X264_CHROMA_FORMAT $config_chroma_format
