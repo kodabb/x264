@@ -30,6 +30,11 @@
 #include "x264.h"
 #include "log.h"
 
+/****************************************************************************
+ * global symbols
+ ****************************************************************************/
+const int x264_chroma_format = X264_CHROMA_FORMAT;
+
 x264_t *x264_8_encoder_open( x264_param_t * );
 void x264_8_nal_encode( x264_t *h, uint8_t *dst, x264_nal_t *nal );
 int  x264_8_encoder_reconfig( x264_t *, x264_param_t * );
