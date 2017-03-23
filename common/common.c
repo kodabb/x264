@@ -26,8 +26,6 @@
 
 #include "common.h"
 
-const int x264_bit_depth = BIT_DEPTH;
-
 const int x264_chroma_format = X264_CHROMA_FORMAT;
 
 /****************************************************************************

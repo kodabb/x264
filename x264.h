@@ -671,15 +671,6 @@ int     x264_param_apply_profile( x264_param_t *, const char *profile );
  * Picture structures and functions
  ****************************************************************************/
 
-/* x264_bit_depth:
- *      Specifies the number of bits per pixel that x264 uses. This is also the
- *      bit depth that x264 encodes in. If this value is > 8, x264 will read
- *      two bytes of input data for each pixel sample, and expect the upper
- *      (16-x264_bit_depth) bits to be zero.
- *      Note: The flag X264_CSP_HIGH_DEPTH must be used to specify the
- *      colorspace depth as well. */
-X264_API extern const int x264_bit_depth;
-
 /* x264_chroma_format:
  *      Specifies the chroma formats that x264 supports encoding. When this
  *      value is non-zero, then it represents a X264_CSP_* that is the only
